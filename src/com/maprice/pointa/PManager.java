@@ -10,7 +10,7 @@ public class PManager {
 	private static IPAnalyticsProvider sAnalyticsInstance;
 	private static IPCrashReportProvider sCrashReportInstance;
 	private static IPServerProvider sServerInstance;
-	private static IPSocialProvider sSocialInstance;
+	private static IPUserProvider sSocialInstance;
 
 	public PManager sharedInstance(){
 		if(sInstance == null){
@@ -81,7 +81,7 @@ public class PManager {
 		}
 	}
 
-	public IPSocialProvider getSocial(){
+	public IPUserProvider getSocial(){
 		if(sSocialInstance == null){
 			throw new RuntimeException("Need to specify an Ad provider in PointAConfig.xml");
 		} else {
