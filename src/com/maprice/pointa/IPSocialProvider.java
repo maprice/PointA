@@ -1,5 +1,5 @@
 package com.maprice.pointa;
 
-public class IPSocialProvider {
+public interface IPSocialProvider extends IPProvider {
 
 }

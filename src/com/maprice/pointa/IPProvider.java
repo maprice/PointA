@@ -1,5 +1,7 @@
 package com.maprice.pointa;
 
-public class IPProvider {
-
+public interface IPProvider {
+	public void initProvider();
+	public void startProvider();
+	public void stopProvider();
 }
