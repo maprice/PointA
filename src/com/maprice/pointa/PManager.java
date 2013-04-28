@@ -17,25 +17,34 @@ public static class PManager {
 		return sInstance;
 	}
 
-	public initPManager(Context pContext){
+	public initPManager(Context pContext, boolean enableAds, boolean enableAnalytics, boolean enableCrashReports, boolean enableServer, boolean enableSocial){
 		//Get json object from XML
+		// TODO: read enables/disables from XML maybe?
+		
+		if(enableAds){
+			String lAdProvider = "AdMob";
+			sAdInstance = Class.forName(lAdProvider);
+		}
 
-		String lAdProvider = "AdMob";
-		sAdInstance = null; //getClassFromString(lAdProvider);
+		if(enableAnalytics){	
+			String lAnalyticsProvider = "GoogleAnalytics";
+			sAnalyticsInstance = Class.forName(lAnalyticsProvider);
+		}
 
-		String lAnalyticsProvider = "GoogleAnalytics";
-		sAnalyticsInstance = null; //getClassFromString(lAnalyticsProvider);
+		if(enableCrashReports){
+			String lCrashReportProvider = "Crashlytics";
+			sCrashReportInstance = Class.forName(lAnalyticsProvider);
+		}
 
-		String lCrashReportProvider = "Crashlytics";
-		sCrashReportInstance = null; //getClassFromString(lAnalyticsProvider);
+		if(enableServer){
+			String lServerProvider = "Parse";
+			sServerInstance Class.forName(lServerProvider);
+		}
 
-		String lServerProvider = "Parse";
-		sServerInstance = null; //getClassFromString(lServerProvider);
-
-		String lSocialProvider = "Parse";
-		sSocialInstance = null; //getClassFromString(lSocialProvider);
-
-
+		if(enableSocial){
+			String lSocialProvider = "Parse";
+			sSocialInstance = Class.forName(lSocialProvider);
+		}
 	}
 
 	public IPAdProvider getAd(){
