@@ -1,6 +1,8 @@
 package com.maprice.pointa;
 
-public static class PManager {
+import android.content.Context;
+
+public class PManager {
 
 	private static PManager sInstance;
 
@@ -17,33 +19,33 @@ public static class PManager {
 		return sInstance;
 	}
 
-	public initPManager(Context pContext, boolean enableAds, boolean enableAnalytics, boolean enableCrashReports, boolean enableServer, boolean enableSocial){
+	public void initPManager(Context pContext, boolean enableAds, boolean enableAnalytics, boolean enableCrashReports, boolean enableServer, boolean enableSocial){
 		//Get json object from XML
 		// TODO: read enables/disables from XML maybe?
 		
 		if(enableAds){
 			String lAdProvider = "AdMob";
-			sAdInstance = Class.forName(lAdProvider);
+			//sAdInstance = Class.forName(lAdProvider);
 		}
 
 		if(enableAnalytics){	
 			String lAnalyticsProvider = "GoogleAnalytics";
-			sAnalyticsInstance = Class.forName(lAnalyticsProvider);
+			//sAnalyticsInstance = Class.forName(lAnalyticsProvider);
 		}
 
 		if(enableCrashReports){
 			String lCrashReportProvider = "Crashlytics";
-			sCrashReportInstance = Class.forName(lAnalyticsProvider);
+			//sCrashReportInstance = Class.forName(lAnalyticsProvider);
 		}
 
 		if(enableServer){
 			String lServerProvider = "Parse";
-			sServerInstance Class.forName(lServerProvider);
+			//sServerInstance Class.forName(lServerProvider);
 		}
 
 		if(enableSocial){
 			String lSocialProvider = "Parse";
-			sSocialInstance = Class.forName(lSocialProvider);
+			//sSocialInstance = Class.forName(lSocialProvider);
 		}
 	}
 
