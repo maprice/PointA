@@ -1,11 +1,17 @@
 package com.pointa.service;
 
 import com.pointa.PointA.ServiceType;
-import com.pointa.config.PointAConfigManager;
+import com.pointa.config.ConfigManager;
 import com.pointa.service.ads.MockAdProvider;
 import com.pointa.service.analytics.MockAnalyticsProvider;
 import com.pointa.service.crashreporter.MockCrashReporter;
 
+/**
+ * Factory class used to handle construction of PointAServices
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
 
 public class PointAServiceFactory{
 
@@ -30,7 +36,7 @@ public class PointAServiceFactory{
 	// ===========================================================
 
 
-	public PointAService buildProvider(ServiceType pService, PointAConfigManager pConfigManager) {
+	public PointAService buildProvider(ServiceType pService, ConfigManager pConfigManager) {
 		PointAService lNewService;
 		
 		ProviderMetaData lMetaData = pConfigManager.getProviderMetaData(pService, 0);

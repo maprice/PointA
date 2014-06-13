@@ -1,11 +1,18 @@
 package com.pointa;
 
 
-import com.pointa.config.PointAConfigManager;
+import com.pointa.config.ConfigManager;
 import com.pointa.service.PointAServiceFactory;
 import com.pointa.service.ads.AdsAdapter;
 import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
+
+/**
+ * PointA Facade used for all library interaction
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
 
 public class PointA {
 
@@ -44,7 +51,7 @@ public class PointA {
 	public static void init(){
 
 		// Create our config manager
-		PointAConfigManager lConfigManager = new PointAConfigManager();
+		ConfigManager lConfigManager = new ConfigManager();
 
 		// Read config file
 		lConfigManager.parse();

@@ -6,15 +6,20 @@ import java.util.Map;
 import com.pointa.PointA.ServiceType;
 import com.pointa.service.ProviderMetaData;
 
+/**
+ * Manages parsing and storing configuration data from PointAConfig.xml
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
 
-
-public class PointAConfigManager{
+public class ConfigManager{
 
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = PointAConfigManager.class.getSimpleName();
+	static final String LOG_TAG = ConfigManager.class.getSimpleName();
 
 
 	// ===========================================================
@@ -27,7 +32,7 @@ public class PointAConfigManager{
 	// Constructors
 	// ===========================================================
 
-	public PointAConfigManager(){
+	public ConfigManager(){
 		mProviders = new HashMap<ServiceType, ProviderMetaData[]>();
 	}
 

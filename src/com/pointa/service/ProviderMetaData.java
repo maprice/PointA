@@ -2,6 +2,13 @@ package com.pointa.service;
 
 import java.util.Map;
 
+/**
+ * Container class of service provider specific data
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
+
 public class ProviderMetaData{
 
 	// ===========================================================

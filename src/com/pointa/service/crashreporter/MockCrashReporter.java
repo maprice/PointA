@@ -2,8 +2,12 @@ package com.pointa.service.crashreporter;
 
 import java.util.Map;
 
-import com.pointa.service.PointAService;
-
+/**
+ * Mock crash reporter interface used to simulate a crash reporter provider
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
 
 public class MockCrashReporter implements CrashReporterAdapter{
 	// ===========================================================

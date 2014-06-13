@@ -2,6 +2,12 @@ package com.pointa.service.analytics;
 
 import java.util.Map;
 
+/**
+ * Mock analytics interface used to simulate an analytics provider
+ * @version 1.0
+ * @since June 13, 2014
+ *
+ */
 
 public class MockAnalyticsProvider implements AnalyticsAdapter{
 
