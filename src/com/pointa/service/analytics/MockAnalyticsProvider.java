@@ -1,12 +1,16 @@
-package com.pointa.crashreporter;
+package com.pointa.service.analytics;
+
+import java.util.Map;
 
 
-public class MockCrashReporter implements ICrashReporter{
+public class MockAnalyticsProvider implements AnalyticsAdapter{
+
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = MockCrashReporter.class.getSimpleName();
+	static final String LOG_TAG = MockAnalyticsProvider.class.getSimpleName();
+
 
 	// ===========================================================
 	// Fields
@@ -16,10 +20,14 @@ public class MockCrashReporter implements ICrashReporter{
 	// Constructors
 	// ===========================================================
 
-
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
+	
+	@Override
+	public void init(Map<String, String> mParams) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

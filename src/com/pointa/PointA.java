@@ -1,12 +1,11 @@
 package com.pointa;
 
 
-import com.pointa.ads.IAds;
-import com.pointa.ads.MockAdProvider;
-import com.pointa.analytics.IAnalytics;
-import com.pointa.analytics.MockAnalyticsProvider;
-import com.pointa.crashreporter.ICrashReporter;
-import com.pointa.crashreporter.MockCrashReporter;
+import com.pointa.config.PointAConfigManager;
+import com.pointa.service.PointAServiceFactory;
+import com.pointa.service.ads.AdsAdapter;
+import com.pointa.service.analytics.AnalyticsAdapter;
+import com.pointa.service.crashreporter.CrashReporterAdapter;
 
 public class PointA {
 
@@ -15,14 +14,22 @@ public class PointA {
 	// ===========================================================
 
 	static final String LOG_TAG =  PointA.class.getSimpleName();
+	
+	public enum ServiceType{
+		Ads,
+		Analytics,
+		CrashReporter
+		//...
+	}
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
 
-	private static IAds mAdProvider;
-	private static IAnalytics mAnalyticsProvider;
-	private static ICrashReporter mCrashReporterProvider;
+	private static AdsAdapter mAdProvider;
+	private static AnalyticsAdapter mAnalyticsProvider;
+	private static CrashReporterAdapter mCrashReporterProvider;
+
 
 	// ===========================================================
 	// Constructors
@@ -35,23 +42,30 @@ public class PointA {
 	// ===========================================================
 
 	public static void init(){
-		// Read config file
 
-		// For now just make everything mock
-		mAdProvider = new MockAdProvider();
-		mAnalyticsProvider = new MockAnalyticsProvider();
-		mCrashReporterProvider = new MockCrashReporter();
+		// Create our config manager
+		PointAConfigManager lConfigManager = new PointAConfigManager();
+
+		// Read config file
+		lConfigManager.parse();
+
+		PointAServiceFactory lFactory = new PointAServiceFactory();
+
+		// Do we want to have separate building methods instead?
+		mAdProvider = (AdsAdapter) lFactory.buildProvider(ServiceType.Ads, lConfigManager);
+		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
+		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 	}
 
-	public static IAds ads(){
+	public static AdsAdapter ads(){
 		return mAdProvider;
 	}
 
-	public static IAnalytics analytics(){
+	public static AnalyticsAdapter analytics(){
 		return mAnalyticsProvider;
 	}
 
-	public static ICrashReporter crashReporter(){
+	public static CrashReporterAdapter crashReporter(){
 		return mCrashReporterProvider;
 	}
 }
