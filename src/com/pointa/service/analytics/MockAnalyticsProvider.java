@@ -2,6 +2,8 @@ package com.pointa.service.analytics;
 
 import java.util.Map;
 
+import com.google.analytics.tracking.android.Tracker;
+
 /**
  * Mock analytics interface used to simulate an analytics provider
  * @version 1.0
@@ -34,6 +36,7 @@ public class MockAnalyticsProvider implements AnalyticsAdapter{
 	public void init(Map<String, String> mParams) {
 		// TODO Auto-generated method stub
 		
+		//GoogleAnalytics an;
 	}
 
 }
