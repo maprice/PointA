@@ -57,7 +57,7 @@ public class PointAServiceFactory{
 
 		}
 		
-		lNewService.init(lMetaData.getParams());
+		//lNewService.init(lMetaData.getParams());
 		
 		return lNewService;
 	}

@@ -1,5 +1,10 @@
 package com.pointa.service.ads;
 
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.widget.RelativeLayout;
+
 import com.pointa.service.PointAService;
 
 /**
@@ -10,5 +15,5 @@ import com.pointa.service.PointAService;
  */
 
 public interface AdsAdapter extends PointAService{
-
+	public void showAd(View RL, Activity a);
 }

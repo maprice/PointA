@@ -75,4 +75,5 @@ public class PointA {
 	public static CrashReporterAdapter crashReporter(){
 		return mCrashReporterProvider;
 	}
+	public static AdsAdapter RAWR(){return mAdProvider;}
 }
