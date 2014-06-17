@@ -60,8 +60,8 @@ public class PointA {
 
 		// Do we want to have separate building methods instead?
 		mAdProvider = (AdsAdapter) lFactory.buildProvider(ServiceType.Ads, lConfigManager);
-		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
-		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
+		//mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
+		//mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
@@ -75,4 +75,5 @@ public class PointA {
 	public static CrashReporterAdapter crashReporter(){
 		return mCrashReporterProvider;
 	}
+	public static AdsAdapter RAWR(){return mAdProvider;}
 }
