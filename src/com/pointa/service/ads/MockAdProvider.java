@@ -3,6 +3,8 @@ package com.pointa.service.ads;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +41,13 @@ public class MockAdProvider implements AdsAdapter{
 	// ===========================================================
 	
 	@Override
-	public void init(Map<String, String> mParams) {
+	public void init(Map<String, String> mParams, Application pApp) {
 		Log.v(LOG_TAG, "init");
 	}
 
 	@Override
 	public void showBannerAd(View v, Activity a){
-		
+		Log.v(LOG_TAG, "showBannerAd");
 	}
 
 	@Override

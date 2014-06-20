@@ -1,6 +1,9 @@
 package com.pointa;
 
 
+import android.app.Application;
+import android.util.Log;
+
 import com.pointa.config.ConfigManager;
 import com.pointa.service.PointAServiceFactory;
 import com.pointa.service.ads.AdsAdapter;
@@ -48,15 +51,15 @@ public class PointA {
 	// Methods
 	// ===========================================================
 
-	public static void init(){
-
+	public static void init(Application pApp){
+		Log.v(LOG_TAG, "PointA init");
 		// Create our config manager
 		ConfigManager lConfigManager = new ConfigManager();
 
 		// Read config file
 		lConfigManager.parse();
 
-		PointAServiceFactory lFactory = new PointAServiceFactory();
+		PointAServiceFactory lFactory = new PointAServiceFactory(pApp);
 
 		// Do we want to have separate building methods instead?
 		mAdProvider = (AdsAdapter) lFactory.buildProvider(ServiceType.Ads, lConfigManager);

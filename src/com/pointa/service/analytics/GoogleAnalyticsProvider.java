@@ -3,6 +3,7 @@ package com.pointa.service.analytics;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -37,26 +38,26 @@ public class GoogleAnalyticsProvider implements AnalyticsAdapter{
 	// Methods
 	// ===========================================================
 	@Override
-	public void init(Map<String, String> mParams) {
-		// TODO Auto-generated method stub
+	public void init(Map<String, String> mParams, Application pApp) {
+
 	}
 	
 	@Override
 	public void send(Context c, String category, String action, String label){
-		Log.e(LOG_TAG, "send Log");
+		Log.v(LOG_TAG, "send Log");
 		tracker = EasyTracker.getInstance(c);
 		tracker.send(MapBuilder.createEvent(category, action, label, null).build());
 	}
 	
 	@Override
 	public void send_onStart(Activity a){
-		Log.e(LOG_TAG, "send_onStart Log");
+		Log.v(LOG_TAG, "send_onStart Log");
 		EasyTracker.getInstance(a).activityStart(a);
 	}
 	
 	@Override
 	public void send_onStop(Activity a){
-		Log.e(LOG_TAG, "send_onStop Log");
+		Log.v(LOG_TAG, "send_onStop Log");
 		EasyTracker.getInstance(a).activityStop(a);
 	}
 }

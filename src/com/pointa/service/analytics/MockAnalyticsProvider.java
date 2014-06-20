@@ -3,6 +3,7 @@ package com.pointa.service.analytics;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -44,7 +45,7 @@ public class MockAnalyticsProvider implements AnalyticsAdapter{
 	}
 	
 	@Override
-	public void init(Map<String, String> mParams) {
+	public void init(Map<String, String> mParams, Application pApp) {
 		Log.v(LOG_TAG, "init");
 	}
 

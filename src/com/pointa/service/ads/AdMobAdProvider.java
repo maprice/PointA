@@ -3,6 +3,8 @@ package com.pointa.service.ads;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,7 +45,7 @@ public class AdMobAdProvider implements AdsAdapter{
 	// ===========================================================
 	
 	@Override
-	public void init(Map<String, String> mParams) {
+	public void init(Map<String, String> mParams, Application pApp) {
 		// To be read via config
 		UNIT_ID = "ca-app-pub-4039374914884378/7666844841";
 		AD_SIZE = AdSize.BANNER;

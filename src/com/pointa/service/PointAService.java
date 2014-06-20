@@ -2,6 +2,8 @@ package com.pointa.service;
 
 import java.util.Map;
 
+import android.app.Application;
+
 /**
  * Base interface all services will implement
  * @version 1.0
@@ -17,5 +19,5 @@ public interface PointAService {
 	 * @param pParams
 	 *            Map containing parameters specified in PointAConfig.xml
 	 */
-	public void init(Map<String, String> pParams);
+	public void init(Map<String, String> pParams, Application pApp);
 }
