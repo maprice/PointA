@@ -2,8 +2,8 @@ package com.pointa.service;
 
 import com.pointa.PointA.ServiceType;
 import com.pointa.config.ConfigManager;
-import com.pointa.service.ads.MockAdProvider;
-import com.pointa.service.analytics.MockAnalyticsProvider;
+import com.pointa.service.ads.AdMobAdProvider;
+import com.pointa.service.analytics.GoogleAnalyticsProvider;
 import com.pointa.service.crashreporter.MockCrashReporter;
 
 /**
@@ -44,10 +44,10 @@ public class PointAServiceFactory{
 		// Use metaData string name to build appropriate class
 		switch(pService){
 		case Ads:
-			lNewService = new MockAdProvider();
+			lNewService = new AdMobAdProvider();
 			break;
 		case Analytics:
-			lNewService = new MockAnalyticsProvider();
+			lNewService = new GoogleAnalyticsProvider();
 			break;
 		case CrashReporter:
 			lNewService = new MockCrashReporter();
@@ -57,7 +57,7 @@ public class PointAServiceFactory{
 
 		}
 		
-		//lNewService.init(lMetaData.getParams());
+		lNewService.init(null);
 		
 		return lNewService;
 	}

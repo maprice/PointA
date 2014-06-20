@@ -1,9 +1,7 @@
 package com.pointa.service.analytics;
 
 import java.util.Map;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -25,8 +23,7 @@ public class MockAnalyticsProvider implements AnalyticsAdapter{
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	private static Tracker tracker;
-
+	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -35,24 +32,20 @@ public class MockAnalyticsProvider implements AnalyticsAdapter{
 	// Methods
 	// ===========================================================
 	public void send(Context c, String category, String action, String label){
-		Log.e(LOG_TAG, "send Log");
-		tracker = EasyTracker.getInstance(c);
-		tracker.send(MapBuilder.createEvent(category, action, label, null).build());
+		Log.v(LOG_TAG, "send");
 	}
 	
 	public void send_onStart(Activity a){
-		Log.e(LOG_TAG, "send_onStart Log");
-		EasyTracker.getInstance(a).activityStart(a);
+		Log.v(LOG_TAG, "send_onStart Log");
 	}
 	
 	public void send_onStop(Activity a){
-		Log.e(LOG_TAG, "send_onStop Log");
-		EasyTracker.getInstance(a).activityStop(a);
+		Log.v(LOG_TAG, "send_onStop Log");
 	}
 	
 	@Override
 	public void init(Map<String, String> mParams) {
-		// TODO Auto-generated method stub
+		Log.v(LOG_TAG, "init");
 	}
 
 }

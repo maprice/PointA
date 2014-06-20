@@ -3,7 +3,6 @@ package com.pointa.service.ads;
 import java.util.Map;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,28 +10,33 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 /**
- * Mock ad interface used to simulate an ad provider
+ * GoogleAdMob Ad interface used to simulate an ad provider
  * @version 1.0
  * @since June 13, 2014
  *
  */
 
-public class MockAdProvider implements AdsAdapter{
+public class AdMobAdProvider implements AdsAdapter{
 
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = MockAdProvider.class.getSimpleName();
+	static final String LOG_TAG = AdMobAdProvider.class.getSimpleName();
 
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
+	private static String UNIT_ID;
+	private static AdSize AD_SIZE;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+	
+	//To be read from config file
+	public AdMobAdProvider(){}
 
 	// ===========================================================
 	// Methods
@@ -40,36 +44,45 @@ public class MockAdProvider implements AdsAdapter{
 	
 	@Override
 	public void init(Map<String, String> mParams) {
-		Log.v(LOG_TAG, "init");
+		// To be read via config
+		UNIT_ID = "ca-app-pub-4039374914884378/7666844841";
+		AD_SIZE = AdSize.BANNER;
 	}
-
+	
 	@Override
 	public void showBannerAd(View v, Activity a){
-		
+		AdView adView = new AdView(a, AD_SIZE, UNIT_ID);
+		((ViewGroup)v).addView(adView);
+		adView.loadAd(new AdRequest());
 	}
 
 	@Override
 	public void hideBannerAd() {
-		Log.v(LOG_TAG, "hideBannerAd");
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void precacheBannerAd() {
-		Log.v(LOG_TAG, "precacheBannerAd");
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void precacheInterstitialAd(Activity pActivity) {
-		Log.v(LOG_TAG, "precacheInterstitialAd");
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void showInterstitialAd() {
-		Log.v(LOG_TAG, "showInterstitialAd");
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void hideInterstitialAd() {
-		Log.v(LOG_TAG, "hideInterstitialAd");
+		// TODO Auto-generated method stub
+		
 	}
 }
