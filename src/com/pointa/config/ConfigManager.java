@@ -42,6 +42,7 @@ public class ConfigManager{
 
 	public void parse(){
 		// Populate mProviders
+		// Max should add stuff here!
 	}
 
 	public ProviderMetaData getProviderMetaData(ServiceType pService, int pPriority){
