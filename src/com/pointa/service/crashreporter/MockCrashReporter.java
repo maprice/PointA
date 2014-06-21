@@ -50,6 +50,10 @@ public class MockCrashReporter implements CrashReporterAdapter{
 		Log.v(LOG_TAG, "logException");
 	}
 
+	@Override
+	public void logException(Exception pException, String pMessage) {
+		Log.v(LOG_TAG, "logException");
+	}
 
 	@Override
 	public void setUsername(String pUsername) {
@@ -67,4 +71,6 @@ public class MockCrashReporter implements CrashReporterAdapter{
 	public void clearMetadata() {
 		Log.v(LOG_TAG, "clearMetadata");
 	}
+
+
 }

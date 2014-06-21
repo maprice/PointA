@@ -58,6 +58,12 @@ public class BugSnagCrashReporterProvider implements CrashReporterAdapter{
 	public void logException(Exception e) {
 		Bugsnag.notify(e);
 	}
+	
+
+	@Override
+	public void logException(Exception pException, String pMessage) {
+		Bugsnag.notify(pException, pMessage);
+	}
 
 	@Override
 	public void setUsername(String pUsername) {
@@ -73,4 +79,5 @@ public class BugSnagCrashReporterProvider implements CrashReporterAdapter{
 	public void clearMetadata() {
 		mMetaData = new MetaData();
 	}
+
 }

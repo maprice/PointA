@@ -61,6 +61,12 @@ public class CrittercismCrashReporterProvider implements CrashReporterAdapter{
 	}
 
 	@Override
+	public void logException(Exception pException, String pMessage) {
+		Crittercism.leaveBreadcrumb(pMessage);
+		Crittercism.logHandledException(pException);
+	}
+	
+	@Override
 	public void setUsername(String pUsername) {
 		Crittercism.setUsername(pUsername);		
 	}
@@ -81,4 +87,6 @@ public class CrittercismCrashReporterProvider implements CrashReporterAdapter{
 		mMetaData = new JSONObject();
 		Crittercism.setMetadata(mMetaData);
 	}
+
+
 }

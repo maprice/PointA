@@ -58,6 +58,11 @@ public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
 	public void logException(Exception e) {
 		BugSenseHandler.sendException(e);		
 	}
+	
+	@Override
+	public void logException(Exception pException, String pMessage) {
+		BugSenseHandler.sendExceptionMessage("Message: ", pMessage, pException);
+	}
 
 	@Override
 	public void setUsername(String pUsername) {
@@ -75,6 +80,9 @@ public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
 	public void clearMetadata() {
 		BugSenseHandler.clearCrashExtraData();
 	}
+
+
+
 	
 	
 }
