@@ -2,26 +2,28 @@ package com.pointa.service.crashreporter;
 
 import java.util.Map;
 
-import android.app.Application;
-import android.content.Context;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
+import android.app.Application;
+
+import com.crittercism.app.Crittercism;
 
 
 
 /**
- * BugSense crash reporter interface
+ * Crittercism crash reporter interface
  * @version 1.0
  * @since June 20, 2014
  *
  */
 
-public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
+public class CrittercismCrashReporterProvider implements CrashReporterAdapter{
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = BugSenseCrashReporterProvider.class.getSimpleName();
+	static final String LOG_TAG = CrittercismCrashReporterProvider.class.getSimpleName();
 
 
 	// ===========================================================
@@ -29,7 +31,7 @@ public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
 	// ===========================================================
 
 	private String mAppId;
-	private Context mContext;
+	private JSONObject mMetaData;
 
 	// ===========================================================
 	// Constructors
@@ -41,40 +43,42 @@ public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
 
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
-		mContext = pApp.getApplicationContext();
-		mAppId = "e84e0e8c";
+		mAppId = "53a50d7bbb94751a22000005";
 
-
-		BugSenseHandler.initAndStartSession(mContext, mAppId);
+		Crittercism.initialize(pApp.getApplicationContext(), mAppId);
+		
+		mMetaData = new JSONObject();
 	}
-
 
 	@Override
 	public void leaveBreadCrub(String pBreadCrub) {
-		BugSenseHandler.leaveBreadcrumb(pBreadCrub);
+		Crittercism.leaveBreadcrumb(pBreadCrub);
 	}
 
 	@Override
 	public void logException(Exception e) {
-		BugSenseHandler.sendException(e);		
+		Crittercism.logHandledException(e);
 	}
 
 	@Override
 	public void setUsername(String pUsername) {
-		BugSenseHandler.setUserIdentifier(pUsername);
+		Crittercism.setUsername(pUsername);		
 	}
-
-
+	
 	@Override
 	public void addMetadata(String pKey, String pValue) {
-		BugSenseHandler.addCrashExtraData(pKey, pValue);
+		try {
+			mMetaData.put(pKey, pValue);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		Crittercism.setMetadata(mMetaData);
 	}
-
 
 	@Override
 	public void clearMetadata() {
-		BugSenseHandler.clearCrashExtraData();
+		mMetaData = new JSONObject();
+		Crittercism.setMetadata(mMetaData);
 	}
-	
-	
 }

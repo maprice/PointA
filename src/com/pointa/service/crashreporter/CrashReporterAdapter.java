@@ -10,7 +10,9 @@ import com.pointa.service.PointAService;
  */
 
 public interface CrashReporterAdapter extends PointAService{
-	public void startSession();
-	public void closeSession();
-	public void flush();
+	public void leaveBreadCrub(String pBreadCrub);
+	public void logException(Exception e);
+	public void setUsername(String pUsername);
+	public void addMetadata(String pKey, String pValue);
+	public void clearMetadata();
 }

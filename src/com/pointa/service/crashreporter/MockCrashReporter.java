@@ -39,21 +39,32 @@ public class MockCrashReporter implements CrashReporterAdapter{
 		Log.v(LOG_TAG, "init");
 	}
 
-
 	@Override
-	public void startSession() {
-		Log.v(LOG_TAG, "startSession");
+	public void leaveBreadCrub(String pBreadCrub) {
+		Log.v(LOG_TAG, "leaveBreadCrub");
 	}
 
 
 	@Override
-	public void closeSession() {
-		Log.v(LOG_TAG, "closeSession");
+	public void logException(Exception e) {
+		Log.v(LOG_TAG, "logException");
 	}
 
 
 	@Override
-	public void flush() {
-		Log.v(LOG_TAG, "flush");
+	public void setUsername(String pUsername) {
+		Log.v(LOG_TAG, "setUsername");
+	}
+
+
+	@Override
+	public void addMetadata(String pKey, String pValue) {
+		Log.v(LOG_TAG, "addMetadata");
+	}
+
+
+	@Override
+	public void clearMetadata() {
+		Log.v(LOG_TAG, "clearMetadata");
 	}
 }
