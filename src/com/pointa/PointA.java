@@ -9,6 +9,7 @@ import com.pointa.service.PointAServiceFactory;
 import com.pointa.service.ads.AdsAdapter;
 import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
+import com.pointa.service.rating.RatingAdapter;
 
 /**
  * PointA Facade used for all library interaction
@@ -28,7 +29,8 @@ public class PointA {
 	public enum ServiceType{
 		Ads,
 		Analytics,
-		CrashReporter
+		CrashReporter,
+		Rating
 		//...
 	}
 
@@ -39,6 +41,7 @@ public class PointA {
 	private static AdsAdapter mAdProvider;
 	private static AnalyticsAdapter mAnalyticsProvider;
 	private static CrashReporterAdapter mCrashReporterProvider;
+	private static RatingAdapter mRatingProvider;
 
 
 	// ===========================================================
@@ -65,6 +68,7 @@ public class PointA {
 		mAdProvider = (AdsAdapter) lFactory.buildProvider(ServiceType.Ads, lConfigManager);
 		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
+		mRatingProvider = (RatingAdapter) lFactory.buildProvider(ServiceType.Rating, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
@@ -77,5 +81,9 @@ public class PointA {
 
 	public static CrashReporterAdapter crashReporter(){
 		return mCrashReporterProvider;
+	}
+	
+	public static RatingAdapter rating(){
+		return mRatingProvider;
 	}
 }
