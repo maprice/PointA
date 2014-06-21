@@ -7,7 +7,7 @@ import com.pointa.PointA.ServiceType;
 import com.pointa.config.ConfigManager;
 import com.pointa.service.ads.AdMobAdProvider;
 import com.pointa.service.analytics.GoogleAnalyticsProvider;
-import com.pointa.service.crashreporter.BugSenseCrashReporterProvider;
+import com.pointa.service.crashreporter.BugSnagCrashReporterProvider;
 import com.pointa.service.rating.GooglePlayRatingProvider;
 
 /**
@@ -61,8 +61,9 @@ public class PointAServiceFactory{
 			lNewService = new GoogleAnalyticsProvider();
 			break;
 		case CrashReporter:
-			lNewService = new BugSenseCrashReporterProvider();
+			//lNewService = new BugSenseCrashReporterProvider();
 			//lNewService = new CrittercismCrashReporterProvider();
+			lNewService = new BugSnagCrashReporterProvider();
 			break;
 		case Rating:
 			lNewService = new GooglePlayRatingProvider();
