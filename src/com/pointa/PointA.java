@@ -9,6 +9,7 @@ import com.pointa.service.PointAServiceFactory;
 import com.pointa.service.ads.AdsAdapter;
 import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
+import com.pointa.service.push.PushAdapter;
 import com.pointa.service.rating.RatingAdapter;
 
 /**
@@ -30,7 +31,8 @@ public class PointA {
 		Ads,
 		Analytics,
 		CrashReporter,
-		Rating
+		Rating,
+		Push
 		//...
 	}
 
@@ -42,7 +44,8 @@ public class PointA {
 	private static AnalyticsAdapter mAnalyticsProvider;
 	private static CrashReporterAdapter mCrashReporterProvider;
 	private static RatingAdapter mRatingProvider;
-
+	private static PushAdapter mPushProvider;
+	
 
 	// ===========================================================
 	// Constructors
@@ -69,6 +72,7 @@ public class PointA {
 		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 		mRatingProvider = (RatingAdapter) lFactory.buildProvider(ServiceType.Rating, lConfigManager);
+		mPushProvider = (PushAdapter) lFactory.buildProvider(ServiceType.Push, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
@@ -85,5 +89,9 @@ public class PointA {
 	
 	public static RatingAdapter rating(){
 		return mRatingProvider;
+	}
+	
+	public static PushAdapter push(){
+		return mPushProvider;
 	}
 }

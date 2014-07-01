@@ -8,6 +8,7 @@ import com.pointa.config.ConfigManager;
 import com.pointa.service.ads.AdMobAdProvider;
 import com.pointa.service.analytics.GoogleAnalyticsProvider;
 import com.pointa.service.crashreporter.BugSnagCrashReporterProvider;
+import com.pointa.service.push.ParsePushProvider;
 import com.pointa.service.rating.GooglePlayRatingProvider;
 
 /**
@@ -68,7 +69,9 @@ public class PointAServiceFactory{
 		case Rating:
 			lNewService = new GooglePlayRatingProvider();
 			break;
-
+		case Push:
+			lNewService = new ParsePushProvider();
+			break;
 		default:
 			// Possibly throw an exception
 			return null;
