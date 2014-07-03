@@ -5,7 +5,6 @@ import java.util.Map;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
@@ -18,12 +17,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import com.pointa.utils.ConnectionDetector;
  
 public class Twitter4JTwitterProvider implements TwitterAdapter {
     // Constants
@@ -59,9 +55,7 @@ public class Twitter4JTwitterProvider implements TwitterAdapter {
      
     // Internet Connection detector
     private ConnectionDetector cd;
-     
-    // Alert Dialog Manager
-    AlertDialogManager alert = new AlertDialogManager();
+
  
     @Override
     public void init(Map<String, String> pParams, Application pApp) {

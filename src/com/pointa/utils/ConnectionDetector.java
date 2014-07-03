@@ -1,4 +1,4 @@
-package com.pointa.service.twitter;
+package com.pointa.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
