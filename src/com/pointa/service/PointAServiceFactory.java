@@ -10,6 +10,7 @@ import com.pointa.service.analytics.GoogleAnalyticsProvider;
 import com.pointa.service.crashreporter.BugSnagCrashReporterProvider;
 import com.pointa.service.push.ParsePushProvider;
 import com.pointa.service.rating.GooglePlayRatingProvider;
+import com.pointa.service.twitter.Twitter4JTwitterProvider;
 
 /**
  * Factory class used to handle construction of PointAServices
@@ -71,6 +72,9 @@ public class PointAServiceFactory{
 			break;
 		case Push:
 			lNewService = new ParsePushProvider();
+			break;
+		case Twitter:
+			lNewService = new Twitter4JTwitterProvider();
 			break;
 		default:
 			// Possibly throw an exception

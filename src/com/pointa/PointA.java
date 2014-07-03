@@ -11,6 +11,7 @@ import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
 import com.pointa.service.push.PushAdapter;
 import com.pointa.service.rating.RatingAdapter;
+import com.pointa.service.twitter.TwitterAdapter;
 
 /**
  * PointA Facade used for all library interaction
@@ -32,7 +33,8 @@ public class PointA {
 		Analytics,
 		CrashReporter,
 		Rating,
-		Push
+		Push,
+		Twitter
 		//...
 	}
 
@@ -45,6 +47,7 @@ public class PointA {
 	private static CrashReporterAdapter mCrashReporterProvider;
 	private static RatingAdapter mRatingProvider;
 	private static PushAdapter mPushProvider;
+	private static TwitterAdapter mTwitterProvider;
 	
 
 	// ===========================================================
@@ -73,6 +76,7 @@ public class PointA {
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 		mRatingProvider = (RatingAdapter) lFactory.buildProvider(ServiceType.Rating, lConfigManager);
 		mPushProvider = (PushAdapter) lFactory.buildProvider(ServiceType.Push, lConfigManager);
+		mTwitterProvider = (TwitterAdapter)  lFactory.buildProvider(ServiceType.Twitter, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
@@ -93,5 +97,9 @@ public class PointA {
 	
 	public static PushAdapter push(){
 		return mPushProvider;
+	}
+	
+	public static TwitterAdapter twitter(){
+		return mTwitterProvider;
 	}
 }
