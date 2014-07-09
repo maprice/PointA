@@ -66,7 +66,7 @@ public class PointA {
 		ConfigManager lConfigManager = new ConfigManager();
 
 		// Read config file
-		lConfigManager.parse();
+		lConfigManager.parse(pApp);
 
 		PointAServiceFactory lFactory = new PointAServiceFactory(pApp);
 
