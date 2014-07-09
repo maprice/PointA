@@ -1,10 +1,29 @@
 package com.pointa.config;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Context;
+import android.content.res.XmlResourceParser;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.maprice.pointa.R;
+import com.pointa.PointA;
 import com.pointa.PointA.ServiceType;
 import com.pointa.service.ProviderMetaData;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 /**
  * Manages parsing and storing configuration data from PointAConfig.xml
@@ -45,10 +64,11 @@ public class ConfigManager{
 		Log.d(LOG_TAG,"Max: Launching Parse...");
 		try {
 
-			ServiceType curType;
-			String curProvider;
+			ServiceType curType = null;
+			String curProvider = "default provider";
 			String curKey = "default key";
 			String curValue = "default value";
+			
 			int curPriority = 1; // if unspecified, 1 is exactly what we want :)
 			// if these are still default inside the map, something is wrong...
 
@@ -132,7 +152,7 @@ public class ConfigManager{
 						{
 							Log.e(LOG_TAG,"Parser Error: Found an unrecognized service type: " + xrp.getText());
 						}
-
+						
 						eventType = xrp.next();
 
 						if (eventType != XmlResourceParser.END_TAG || !xrp.getName().trim().equalsIgnoreCase("type"))
@@ -163,6 +183,8 @@ public class ConfigManager{
 							}
 
 							eventType = xrp.next();
+							
+							ProviderMetaData[] curParams = null;// = new HashMap<String,String>();
 
 							if (eventType == XmlResourceParser.START_TAG && xrp.getName().trim().equalsIgnoreCase("priority"))
 							{
@@ -184,6 +206,8 @@ public class ConfigManager{
 									Log.e(LOG_TAG, "Parser Error: Expected </priority>");
 								}
 
+								curParams[curPriority] = new ProviderMetaData(curProvider, null);
+								
 								// loop to populate parameters
 								while (eventType != XmlResourceParser.END_DOCUMENT)
 								{
@@ -209,11 +233,9 @@ public class ConfigManager{
 									}
 									eventType = xrp.next();
 									
-									//got key and value; now insert into map
-	
-									
-									
+									curParams[curPriority].getParams().put(curKey, curValue);
 								}
+								mProviders.put(curType, curParams);
 
 							}
 
