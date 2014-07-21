@@ -11,7 +11,7 @@ import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
 import com.pointa.service.push.PushAdapter;
 import com.pointa.service.rating.RatingAdapter;
-import com.pointa.service.twitter.TwitterAdapter;
+import com.pointa.service.social.twitter.TwitterAdapter;
 
 /**
  * PointA Facade used for all library interaction
@@ -68,9 +68,10 @@ public class PointA {
 		// Read config file
 		lConfigManager.parse();
 
+		// Create factory
 		PointAServiceFactory lFactory = new PointAServiceFactory(pApp);
 
-		// Do we want to have separate building methods instead?
+		// Build providers
 		mAdProvider = (AdsAdapter) lFactory.buildProvider(ServiceType.Ads, lConfigManager);
 		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
@@ -80,26 +81,32 @@ public class PointA {
 	}
 
 	public static AdsAdapter ads(){
+		// Add null error checking
 		return mAdProvider;
 	}
 
 	public static AnalyticsAdapter analytics(){
+		// Add null error checking
 		return mAnalyticsProvider;
 	}
 
 	public static CrashReporterAdapter crashReporter(){
+		// Add null error checking
 		return mCrashReporterProvider;
 	}
 	
 	public static RatingAdapter rating(){
+		// Add null error checking
 		return mRatingProvider;
 	}
 	
 	public static PushAdapter push(){
+		// Add null error checking
 		return mPushProvider;
 	}
 	
 	public static TwitterAdapter twitter(){
+		// Add null error checking
 		return mTwitterProvider;
 	}
 }
