@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
@@ -68,17 +70,17 @@ public class ConfigManager{
 			String curProvider = "default provider";
 			String curKey = "default key";
 			String curValue = "default value";
-			
+
 			int curPriority = 1; // if unspecified, 1 is exactly what we want :)
 			// if these are still default inside the map, something is wrong...
 
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			factory.setNamespaceAware(true);
-			XmlPullParser xpp = factory.newPullParser();
+			// XmlPullParser xpp = factory.newPullParser();
 
 			XmlResourceParser xrp = defaultContext.getResources().getXml(R.xml.config);
 
-			InputStream inputStream = defaultContext.getResources().openRawResource(R.raw.config);
+			// InputStream inputStream = defaultContext.getResources().openRawResource(R.raw.config);
 
 			Log.d(LOG_TAG, "Parser: input set");
 
@@ -103,8 +105,7 @@ public class ConfigManager{
 		        	  Log.d(LOG_TAG,"Parser: End tag "+xrp.getName());
 		          } else if(eventType == XmlPullParser.TEXT) {
 		        	  Log.d(LOG_TAG,"Parser: Text "+xrp.getText());
-		          } else
-		          {
+		          } else {
 		        	  Log.d(LOG_TAG, "Parser: Found an unrecognized thing");
 		          }
 		          eventType = xrp.next();
@@ -112,22 +113,28 @@ public class ConfigManager{
 			Log.d(LOG_TAG, "Parser: End of document");
 			 */
 
-			int eventType = xrp.next();
 			Log.d(LOG_TAG, "Parser: Starting to read");
 
+			int eventType = xrp.next(); //<start document>
+			
+			eventType = xrp.next(); // <pointAconfig>
+			
 			while (eventType != XmlResourceParser.END_DOCUMENT)
 			{
+				eventType = xrp.next(); // <service>
 
 				if (eventType == XmlResourceParser.START_TAG && xrp.getName().trim().equalsIgnoreCase("service"))
 				{
 					Log.d(LOG_TAG, "Parser: Found a service!");
-					eventType = xrp.next();
+
+					eventType = xrp.next(); //<type>
+
 					if (eventType == XmlPullParser.START_TAG)
 					{
-						eventType = xrp.next();
-						
+						eventType = xrp.next(); // "type"
+
 						Log.d(LOG_TAG,"Parser: Found a type:" + xrp.getText().trim() + "!");
-						
+
 						if (xrp.getText().trim().equalsIgnoreCase("ads"))
 						{
 							curType = ServiceType.Ads;
@@ -152,19 +159,19 @@ public class ConfigManager{
 						{
 							Log.e(LOG_TAG,"Parser Error: Found an unrecognized service type: " + xrp.getText());
 						}
-						
-						eventType = xrp.next();
+
+						eventType = xrp.next(); //</type>
 
 						if (eventType != XmlResourceParser.END_TAG || !xrp.getName().trim().equalsIgnoreCase("type"))
 						{
 							Log.e(LOG_TAG, "Parser Error: Expected </type>, found something that isn't an end tag, or an end tag for something that is not type.");
 						}
 
-						eventType = xrp.next();
+						eventType = xrp.next(); //<provider>
 
 						if (eventType == XmlResourceParser.START_TAG && xrp.getName().trim().equalsIgnoreCase("provider"))
 						{
-							eventType = xrp.next();
+							eventType = xrp.next(); // "provider"
 							if (eventType == XmlResourceParser.TEXT)
 							{
 								Log.d(LOG_TAG, "Parser: Got provider: " + xrp.getText());
@@ -175,20 +182,20 @@ public class ConfigManager{
 								Log.e(LOG_TAG, "Parser Error: Expected provider name; found something that isn't text");
 							}
 
-							eventType = xrp.next();
+							eventType = xrp.next(); // </provider>
 
 							if (eventType != XmlResourceParser.END_TAG || xrp.getName().trim().equalsIgnoreCase("/provider"))
 							{
 								Log.e(LOG_TAG, "Parser Error: Expected </provider>, found " + xrp.getName() + "!");
 							}
 
-							eventType = xrp.next();
-							
-							ProviderMetaData[] curParams = null;// = new HashMap<String,String>();
+							HashMap<Integer, ProviderMetaData> curParams = new HashMap<Integer, ProviderMetaData>();
+
+							eventType = xrp.next(); // <priority>
 
 							if (eventType == XmlResourceParser.START_TAG && xrp.getName().trim().equalsIgnoreCase("priority"))
 							{
-								eventType = xrp.next();
+								eventType = xrp.next(); // "priority"
 								if (eventType == XmlResourceParser.TEXT)
 								{
 									Log.d(LOG_TAG, "Parser: Got priority: " + xrp.getText());
@@ -199,44 +206,65 @@ public class ConfigManager{
 									Log.e(LOG_TAG, "Parser Error: Expected priority; found something that isn't text");
 								}
 
-								eventType = xrp.next();
+								eventType = xrp.next(); // </priority>
 
 								if (eventType != XmlResourceParser.END_TAG || xrp.getName().trim().equalsIgnoreCase("/priority"))
 								{
 									Log.e(LOG_TAG, "Parser Error: Expected </priority>");
 								}
 
-								curParams[curPriority] = new ProviderMetaData(curProvider, null);
-								
+								if (curParams.get(curPriority) != null)
+								{
+									Log.e(LOG_TAG, "Error: attempting to overwrite an existing priority.");
+								}
+								curParams.put(curPriority, new ProviderMetaData(curProvider, new HashMap<String, String>()));
+
 								// loop to populate parameters
 								while (eventType != XmlResourceParser.END_DOCUMENT)
-								{
-									if (eventType == XmlResourceParser.END_TAG && xrp.getName().trim().equalsIgnoreCase("service"))
-									{
-										Log.d(LOG_TAG, "Parser: Found the end of a service");
-										break;
-									}
-									eventType = xrp.next();
-									
+								{	
+									eventType = xrp.next(); // <key>
+
 									if (eventType == XmlResourceParser.START_TAG)
 									{
 										curKey = xrp.getName();
 										Log.d(LOG_TAG, "Parser: Got a key: " + xrp.getName());
+									} 
+									else if ( eventType == XmlResourceParser.END_TAG && xrp.getName().trim().equalsIgnoreCase("service"))
+									{
+
+
+										Log.d(LOG_TAG, "Parser: Found the end of a service: " + curProvider);
+
+										break;
 									}
-									
-									eventType = xrp.next();
-									
+
+									eventType = xrp.next(); // "value"
+
 									if (eventType == XmlResourceParser.TEXT)
 									{
 										curValue = xrp.getText();
 										Log.d(LOG_TAG, "Parser: Got a value: " + xrp.getText());
 									}
-									eventType = xrp.next();
-									
-									curParams[curPriority].getParams().put(curKey, curValue);
-								}
-								mProviders.put(curType, curParams);
+									eventType = xrp.next(); // </key>
 
+									if (curParams.get(curPriority).getParams() == null)
+									{
+										Log.d(LOG_TAG, "getParams is null");
+									}
+
+									curParams.get(curPriority).getParams().put(curKey, curValue);
+								}
+								TreeMap<Integer, ProviderMetaData> sortedParams = new TreeMap<Integer, ProviderMetaData>();;
+								for (Integer i: curParams.keySet())
+								{
+									sortedParams.put(i, curParams.get(i)); 
+								}
+								for (Integer i: curParams.keySet())
+								{
+									Log.d(LOG_TAG, "priority: " + i + ", thing: " + curParams.get(i).getName());
+								}
+								//mProviders.put(curType, curParams.values().toArray(new ProviderMetaData[curParams.size()]));
+								mProviders.put(curType, sortedParams.values().toArray(new ProviderMetaData[sortedParams.size()]));
 							}
 
 						}
@@ -251,7 +279,6 @@ public class ConfigManager{
 					}
 
 				}
-				eventType = xrp.next();
 
 			}
 			xrp.close();
@@ -264,6 +291,38 @@ public class ConfigManager{
 			e.printStackTrace();
 		}
 
+
+
+	}
+
+	public void printmProviders()
+	{
+		Log.d(LOG_TAG, "<pointAconfig>");
+		int providerIndex = 1;
+		for (ServiceType serType: mProviders.keySet())
+		{
+			Log.d(LOG_TAG, "<service>");
+			Log.d(LOG_TAG, "<type>");
+			Log.d(LOG_TAG, serType.toString());
+			Log.d(LOG_TAG, "</type>");
+			Log.d(LOG_TAG, "<provider>");
+			Log.d(LOG_TAG, mProviders.get(serType)[providerIndex].getName());
+			Log.d(LOG_TAG, "</provider>");
+			Log.d(LOG_TAG, "<priority>");
+			Log.d(LOG_TAG, Integer.toString(providerIndex));
+			Log.d(LOG_TAG, "</priority>");
+
+			for (String key: mProviders.get(serType)[providerIndex].getParams().keySet())
+				// oh lawd that's ugly
+			{
+				Log.d(LOG_TAG, "<" + key + ">");
+				Log.d(LOG_TAG, mProviders.get(serType)[providerIndex].getParams().get(key));
+				Log.d(LOG_TAG, "</" + key + ">");
+			}
+
+			Log.d(LOG_TAG, "</service>");
+		}
+		Log.e(LOG_TAG, "</pointAconfig");
 	}
 
 	public ProviderMetaData getProviderMetaData(ServiceType pService, int pPriority){
