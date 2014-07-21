@@ -4,14 +4,8 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.ads.AdRequest;
-import com.google.ads.AdSize;
-import com.google.ads.AdView;
 /**
  * Mock ad interface used to simulate an ad provider
  * @version 1.0

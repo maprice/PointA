@@ -67,7 +67,7 @@ public class PointAServiceFactory{
 			try {
 				Class<?> lProviderClass;
 
-				String lFullClassName = String.format(fClassPathFormat, pService.toString(), lMetaData.getName());
+				String lFullClassName = String.format(fClassPathFormat, pService.getPackageName(), lMetaData.getName());
 				lProviderClass = Class.forName(lFullClassName);
 				lNewService = (PointAService) lProviderClass.newInstance();
 
@@ -98,6 +98,8 @@ public class PointAServiceFactory{
 				continue;
 			}
 
+			
+			Log.v(LOG_TAG, "	" + pService.getClass() + " Provider: " + lMetaData.getName());
 			return lNewService;
 		}
 	}

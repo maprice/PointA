@@ -26,29 +26,30 @@ public class PointA {
 	// ===========================================================
 
 	static final String LOG_TAG =  PointA.class.getSimpleName();
-	
+
 	public enum ServiceType{
-		Ads("ads"),
-		Analytics("analytics"),
-		CrashReporter("crashreporter"),
-		Rating("rating"),
-		Push("push");
+		Ads("ads", "Ads"),
+		Analytics("analytics", "Analytics"),
+		CrashReporter("crashreporter", "CrashReporter"),
+		Rating("rating", "Rating"),
+		Push("push", "Push");
 		//...
-		
-	
-		private ServiceType(final String text) {
-			this.text = text;
+
+
+		private ServiceType(final String pPackage, final String pClass) {
+			this.mPackage = pPackage;
+			this.mClass = pClass;
 		}
 
-		private final String text;
-
-		/* (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
+		private final String mPackage;
+		private final String mClass;
+	
+		public String getPackageName() {
+			return mPackage;
+		}
 		
-		@Override
-		public String toString() {
-			return text;
+		public String getClassName() {
+			return mClass;
 		}
 	}
 
@@ -61,7 +62,7 @@ public class PointA {
 	private static CrashReporterAdapter mCrashReporterProvider;
 	private static RatingAdapter mRatingProvider;
 	private static PushAdapter mPushProvider;
-	
+
 
 	// ===========================================================
 	// Constructors
@@ -93,27 +94,37 @@ public class PointA {
 	}
 
 	public static AdsAdapter ads(){
-		// Add null error checking
+		if(mAdProvider == null)
+			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
+		
 		return mAdProvider;
 	}
 
 	public static AnalyticsAdapter analytics(){
-		// Add null error checking
+		if(mAdProvider == null)
+			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
+		
 		return mAnalyticsProvider;
 	}
 
 	public static CrashReporterAdapter crashReporter(){
-		// Add null error checking
+		if(mAdProvider == null)
+			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
+		
 		return mCrashReporterProvider;
 	}
-	
+
 	public static RatingAdapter rating(){
-		// Add null error checking
+		if(mAdProvider == null)
+			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
+		
 		return mRatingProvider;
 	}
-	
+
 	public static PushAdapter push(){
-		// Add null error checking
+		if(mAdProvider == null)
+			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
+		
 		return mPushProvider;
 	}
 }
