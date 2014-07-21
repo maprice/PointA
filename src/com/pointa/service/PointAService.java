@@ -19,5 +19,5 @@ public interface PointAService {
 	 * @param pParams
 	 *            Map containing parameters specified in PointAConfig.xml
 	 */
-	public void init(Map<String, String> pParams, Application pApp);
+	public void init(Map<String, String> pParams, Application pApp) throws Exception;
 }

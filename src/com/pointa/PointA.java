@@ -11,7 +11,6 @@ import com.pointa.service.analytics.AnalyticsAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
 import com.pointa.service.push.PushAdapter;
 import com.pointa.service.rating.RatingAdapter;
-import com.pointa.service.social.twitter.TwitterAdapter;
 
 /**
  * PointA Facade used for all library interaction
@@ -29,13 +28,28 @@ public class PointA {
 	static final String LOG_TAG =  PointA.class.getSimpleName();
 	
 	public enum ServiceType{
-		Ads,
-		Analytics,
-		CrashReporter,
-		Rating,
-		Push,
-		Twitter
+		Ads("ads"),
+		Analytics("analytics"),
+		CrashReporter("crashreporter"),
+		Rating("rating"),
+		Push("push");
 		//...
+		
+	
+		private ServiceType(final String text) {
+			this.text = text;
+		}
+
+		private final String text;
+
+		/* (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		
+		@Override
+		public String toString() {
+			return text;
+		}
 	}
 
 	// ===========================================================
@@ -47,7 +61,6 @@ public class PointA {
 	private static CrashReporterAdapter mCrashReporterProvider;
 	private static RatingAdapter mRatingProvider;
 	private static PushAdapter mPushProvider;
-	private static TwitterAdapter mTwitterProvider;
 	
 
 	// ===========================================================
@@ -77,7 +90,6 @@ public class PointA {
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 		mRatingProvider = (RatingAdapter) lFactory.buildProvider(ServiceType.Rating, lConfigManager);
 		mPushProvider = (PushAdapter) lFactory.buildProvider(ServiceType.Push, lConfigManager);
-		mTwitterProvider = (TwitterAdapter)  lFactory.buildProvider(ServiceType.Twitter, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
@@ -103,10 +115,5 @@ public class PointA {
 	public static PushAdapter push(){
 		// Add null error checking
 		return mPushProvider;
-	}
-	
-	public static TwitterAdapter twitter(){
-		// Add null error checking
-		return mTwitterProvider;
 	}
 }

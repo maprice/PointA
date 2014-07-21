@@ -12,12 +12,12 @@ import android.util.Log;
  *
  */
 
-public class MockCrashReporter implements CrashReporterAdapter{
+public class MockCrashReporterProvider implements CrashReporterAdapter{
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = MockCrashReporter.class.getSimpleName();
+	static final String LOG_TAG = MockCrashReporterProvider.class.getSimpleName();
 
 
 
