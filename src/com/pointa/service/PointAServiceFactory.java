@@ -2,15 +2,15 @@ package com.pointa.service;
 
 
 import android.app.Application;
+import android.util.Log;
 
 import com.pointa.PointA.ServiceType;
 import com.pointa.config.ConfigManager;
-import com.pointa.service.ads.AdMobAdProvider;
-import com.pointa.service.analytics.GoogleAnalyticsProvider;
-import com.pointa.service.crashreporter.BugSnagCrashReporterProvider;
-import com.pointa.service.push.ParsePushProvider;
-import com.pointa.service.rating.GooglePlayRatingProvider;
-import com.pointa.service.twitter.Twitter4JTwitterProvider;
+import com.pointa.service.ads.MockAdProvider;
+import com.pointa.service.analytics.MockAnalyticsProvider;
+import com.pointa.service.crashreporter.MockCrashReporterProvider;
+import com.pointa.service.push.MockPushProvider;
+import com.pointa.service.rating.MockRatingProvider;
 
 /**
  * Factory class used to handle construction of PointAServices
@@ -27,13 +27,14 @@ public class PointAServiceFactory{
 
 	static final String LOG_TAG = PointAServiceFactory.class.getSimpleName();
 
+	final private String fClassPathFormat = "com.pointa.service.%s.%sProvider";
 
 	// ===========================================================
 	// Fields
 	// ===========================================================
 
 	private final Application mApp;
-	
+
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -50,40 +51,77 @@ public class PointAServiceFactory{
 
 
 	public PointAService buildProvider(ServiceType pService, ConfigManager pConfigManager) {
-		PointAService lNewService;
-		
-		ProviderMetaData lMetaData = pConfigManager.getProviderMetaData(pService, 0);
-		
-		// Use metaData string name to build appropriate class
+		PointAService lNewService = null;
+
+		// Loop until successful init or no more providers exist
+		for(int priority = 1; ; priority++){
+
+			ProviderMetaData lMetaData = pConfigManager.getProviderMetaData(pService, priority);
+
+			// We have no more providers to try, return a mock provider
+			if(lMetaData == null){
+				return buildMockProvider(pService);
+			}
+
+			// Build class from string
+			try {
+				Class<?> lProviderClass;
+
+				String lFullClassName = String.format(fClassPathFormat, pService.toString(), lMetaData.getName());
+				lProviderClass = Class.forName(lFullClassName);
+				lNewService = (PointAService) lProviderClass.newInstance();
+
+			} catch (ClassNotFoundException e) {
+				Log.e(LOG_TAG, 
+						"Could not find class " + 
+								String.format(fClassPathFormat, pService.toString(), lMetaData.getName()) + 
+								"\n Are you sure " +  
+								lMetaData.getName() + 
+								" is correctly written in the config.xml?"
+						);
+				Log.e(LOG_TAG, "Failed to initialize " + lMetaData.getName() + " falling to priority" + priority + 1);
+				continue;
+			} catch (InstantiationException e) {
+				Log.e(LOG_TAG, "Failed to initialize " + lMetaData.getName() + " falling to priority" + priority + 1);
+				continue;
+			} catch (IllegalAccessException e) {
+				Log.e(LOG_TAG, "Failed to initialize " + lMetaData.getName() + " falling to priority" + priority + 1);
+				continue;
+			}
+
+			// Try to initilaze provider
+			try {
+				lNewService.init(null, mApp);
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.e(LOG_TAG, "Failed to initialize " + lMetaData.getName() + " falling to priority" + priority + 1);
+				continue;
+			}
+
+			return lNewService;
+		}
+	}
+
+	private PointAService buildMockProvider(ServiceType pService){	
+		PointAService lNewService = null;
 		switch(pService){
 		case Ads:
-			lNewService = new AdMobAdProvider();
+			lNewService = new MockAdProvider();
 			break;
 		case Analytics:
-			lNewService = new GoogleAnalyticsProvider();
+			lNewService = new MockAnalyticsProvider();
 			break;
 		case CrashReporter:
-			//lNewService = new BugSenseCrashReporterProvider();
-			//lNewService = new CrittercismCrashReporterProvider();
-			lNewService = new BugSnagCrashReporterProvider();
+			lNewService = new MockCrashReporterProvider();
 			break;
 		case Rating:
-			lNewService = new GooglePlayRatingProvider();
+			lNewService = new MockRatingProvider();
 			break;
 		case Push:
-			lNewService = new ParsePushProvider();
+			lNewService = new MockPushProvider();
 			break;
-		case Twitter:
-			lNewService = new Twitter4JTwitterProvider();
-			break;
-		default:
-			// Possibly throw an exception
-			return null;
-
 		}
-
-		lNewService.init(null, mApp);
-		
 		return lNewService;
 	}
+
 }
