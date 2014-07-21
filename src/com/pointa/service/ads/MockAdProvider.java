@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 /**
  * Mock ad interface used to simulate an ad provider
  * @version 1.0
@@ -39,33 +40,29 @@ public class MockAdProvider implements AdsAdapter{
 		Log.v(LOG_TAG, "init");
 	}
 
+
 	@Override
-	public void showBannerAd(View v, Activity a){
+	public void showBannerAd(ViewGroup pContainer, Activity pActivity) {
 		Log.v(LOG_TAG, "showBannerAd");
 	}
 
-	@Override
-	public void hideBannerAd() {
-		Log.v(LOG_TAG, "hideBannerAd");
-	}
 
 	@Override
-	public void precacheBannerAd() {
-		Log.v(LOG_TAG, "precacheBannerAd");
+	public void precacheBannerAd(Activity pActivity) {
+		Log.v(LOG_TAG, "precacheBannerAd");	
 	}
+
 
 	@Override
 	public void precacheInterstitialAd(Activity pActivity) {
-		Log.v(LOG_TAG, "precacheInterstitialAd");
+		Log.v(LOG_TAG, "precacheInterstitialAd");	
 	}
 
-	@Override
-	public void showInterstitialAd() {
-		Log.v(LOG_TAG, "showInterstitialAd");
-	}
 
 	@Override
-	public void hideInterstitialAd() {
-		Log.v(LOG_TAG, "hideInterstitialAd");
+	public void showInterstitialAd(Activity pActivity) {
+		Log.v(LOG_TAG, "showInterstitialAd");	
 	}
+
+
 }

@@ -2,6 +2,7 @@ package com.pointa.service.ads;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.pointa.service.PointAService;
 
@@ -13,12 +14,11 @@ import com.pointa.service.PointAService;
  */
 
 public interface AdsAdapter extends PointAService{
-	public void showBannerAd(View RL, Activity a);
-	public void hideBannerAd();
+	public void showBannerAd(ViewGroup pContainer, Activity pActivity);
 	
-	public void precacheBannerAd();
+	public void precacheBannerAd(Activity pActivity);
 	public void precacheInterstitialAd(Activity pActivity);
 	
-	public void showInterstitialAd();
-	public void hideInterstitialAd();
+	public void showInterstitialAd(Activity pActivity);
+	
 }
