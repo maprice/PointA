@@ -135,8 +135,8 @@ public class PointA {
 	// Life cycle Methods
 	// ===========================================================
 	
-	public void onActivityResult(int requestCode, int resultCode, Intent data){
-		mBillingAdapter.pointActivityResult(requestCode, resultCode, data);
+	public boolean onActivityResult(int requestCode, int resultCode, Intent data){
+		return mBillingAdapter.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public void onDestroy() {
