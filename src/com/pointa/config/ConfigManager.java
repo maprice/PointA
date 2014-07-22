@@ -1,13 +1,6 @@
 package com.pointa.config;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +9,6 @@ import java.util.TreeMap;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.maprice.pointa.R;
 import com.pointa.PointA;
@@ -47,14 +39,14 @@ public class ConfigManager{
 	// Fields
 	// ===========================================================
 
-	private final Map<ServiceType,ProviderMetaData[]> mProviders;
+	private final Map<ServiceType,ArrayList<ProviderMetaData>> mProviders;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
 
 	public ConfigManager(){
-		mProviders = new HashMap<ServiceType, ProviderMetaData[]>();
+		mProviders = new HashMap<ServiceType, ArrayList<ProviderMetaData>>();
 	}
 
 	// ===========================================================
@@ -114,11 +106,9 @@ public class ConfigManager{
 			 */
 
 			Log.d(LOG_TAG, "Parser: Starting to read");
-
 			int eventType = xrp.next(); //<start document>
-			
 			eventType = xrp.next(); // <pointAconfig>
-			
+
 			while (eventType != XmlResourceParser.END_DOCUMENT)
 			{
 				eventType = xrp.next(); // <service>
@@ -190,7 +180,8 @@ public class ConfigManager{
 							}
 
 							HashMap<Integer, ProviderMetaData> curParams = new HashMap<Integer, ProviderMetaData>();
-
+							HashMap<String, String> simpleParamsMap = new HashMap<String, String>();
+							
 							eventType = xrp.next(); // <priority>
 
 							if (eventType == XmlResourceParser.START_TAG && xrp.getName().trim().equalsIgnoreCase("priority"))
@@ -231,10 +222,7 @@ public class ConfigManager{
 									} 
 									else if ( eventType == XmlResourceParser.END_TAG && xrp.getName().trim().equalsIgnoreCase("service"))
 									{
-
-
 										Log.d(LOG_TAG, "Parser: Found the end of a service: " + curProvider);
-
 										break;
 									}
 
@@ -251,20 +239,34 @@ public class ConfigManager{
 									{
 										Log.d(LOG_TAG, "getParams is null");
 									}
-
 									curParams.get(curPriority).getParams().put(curKey, curValue);
+									simpleParamsMap.put(curKey, curValue);
 								}
-								TreeMap<Integer, ProviderMetaData> sortedParams = new TreeMap<Integer, ProviderMetaData>();;
+								TreeMap<Integer, ProviderMetaData> sortedParams = new TreeMap<Integer, ProviderMetaData>();
 								for (Integer i: curParams.keySet())
 								{
-									sortedParams.put(i, curParams.get(i)); 
+									//sortedParams.put(i, curParams.get(i));
+									sortedParams.put(i, new ProviderMetaData(curProvider, simpleParamsMap));
 								}
 								for (Integer i: curParams.keySet())
 								{
-									Log.d(LOG_TAG, "priority: " + i + ", thing: " + curParams.get(i).getName());
+									Log.d(LOG_TAG, "Inserting priority: " + i + ", thing: " + curProvider);
 								}
-								//mProviders.put(curType, curParams.values().toArray(new ProviderMetaData[curParams.size()]));
-								mProviders.put(curType, sortedParams.values().toArray(new ProviderMetaData[sortedParams.size()]));
+								//mProviders.put(curType, sortedParams.values().toArray(new ProviderMetaData[sortedParams.size()]));
+								// outdated code - only allows one provider per service
+								
+								Log.d(LOG_TAG, "curtype: " + curType.toString());
+								Log.d(LOG_TAG, "curPriority: " + curPriority);
+
+								if (mProviders.get(curType) == null)
+								{
+									mProviders.put(curType, new ArrayList<ProviderMetaData>());
+								}
+								
+								
+								mProviders.get(curType).add(new ProviderMetaData(curProvider, simpleParamsMap));
+								//mProviders.get(curType)[curPriority] = new ProviderMetaData();
+								//Log.d(LOG_TAG, "Array Value: " + mProviders.get(curType).get(curPriority));
 							}
 
 						}
@@ -297,48 +299,53 @@ public class ConfigManager{
 
 	public void printmProviders()
 	{
+		Log.d(LOG_TAG, "Testing Printer: ");
 		Log.d(LOG_TAG, "<pointAconfig>");
-		int providerIndex = 1;
+		//int providerIndex = 0;
 		for (ServiceType serType: mProviders.keySet())
 		{
-			Log.d(LOG_TAG, "<service>");
-			Log.d(LOG_TAG, "<type>");
-			Log.d(LOG_TAG, serType.toString());
-			Log.d(LOG_TAG, "</type>");
-			Log.d(LOG_TAG, "<provider>");
-			Log.d(LOG_TAG, mProviders.get(serType)[providerIndex].getName());
-			Log.d(LOG_TAG, "</provider>");
-			Log.d(LOG_TAG, "<priority>");
-			Log.d(LOG_TAG, Integer.toString(providerIndex));
-			Log.d(LOG_TAG, "</priority>");
-
-			for (String key: mProviders.get(serType)[providerIndex].getParams().keySet())
-				// oh lawd that's ugly
+			for (int providerIndex = 0; providerIndex < mProviders.get(serType).size(); providerIndex++)
 			{
-				Log.d(LOG_TAG, "<" + key + ">");
-				Log.d(LOG_TAG, mProviders.get(serType)[providerIndex].getParams().get(key));
-				Log.d(LOG_TAG, "</" + key + ">");
-			}
+				Log.d(LOG_TAG, Integer.toString(providerIndex) + " of " + Integer.toString(mProviders.get(serType).size()));
+				Log.d(LOG_TAG, "<service>");
+				Log.d(LOG_TAG, "<type>");
+				Log.d(LOG_TAG, serType.toString());
+				Log.d(LOG_TAG, "</type>");
+				Log.d(LOG_TAG, "<provider>");
+				Log.d(LOG_TAG, mProviders.get(serType).get(providerIndex).getName());
+				Log.d(LOG_TAG, "</provider>");
+				Log.d(LOG_TAG, "<priority>");
+				Log.d(LOG_TAG, Integer.toString(providerIndex));
+				Log.d(LOG_TAG, "</priority>");
 
-			Log.d(LOG_TAG, "</service>");
+				for (String key: mProviders.get(serType).get(providerIndex).getParams().keySet())
+					// oh lawd that's ugly
+				{
+					Log.d(LOG_TAG, "<" + key + ">");
+					Log.d(LOG_TAG, mProviders.get(serType).get(providerIndex).getParams().get(key));
+					Log.d(LOG_TAG, "</" + key + ">");
+				}
+				Log.d(LOG_TAG, "</service>");
+			}
 		}
-		Log.e(LOG_TAG, "</pointAconfig");
+		
+		Log.e(LOG_TAG, "</pointAconfig>");
 	}
 
 	public ProviderMetaData getProviderMetaData(ServiceType pService, int pPriority){
-		ProviderMetaData[] lServiceProvider = mProviders.get(pService);
+		ArrayList<ProviderMetaData> lServiceProvider = mProviders.get(pService);
 
 		if(lServiceProvider == null){
 			// Maybe do something smarter than returning null
 			return null;
 		}
-		else if(lServiceProvider.length < pPriority){
+		else if(lServiceProvider.size() < pPriority){
 			// Do something interesting
 			return null;
 		}
 
 
-		return lServiceProvider[pPriority];
+		return lServiceProvider.get(pPriority);
 	}
 
 
