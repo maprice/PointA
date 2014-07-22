@@ -2,12 +2,14 @@ package com.pointa;
 
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.pointa.config.ConfigManager;
 import com.pointa.service.PointAServiceFactory;
 import com.pointa.service.ads.AdsAdapter;
 import com.pointa.service.analytics.AnalyticsAdapter;
+import com.pointa.service.billing.BillingAdapter;
 import com.pointa.service.crashreporter.CrashReporterAdapter;
 import com.pointa.service.push.PushAdapter;
 import com.pointa.service.rating.RatingAdapter;
@@ -32,7 +34,8 @@ public class PointA {
 		Analytics("analytics", "Analytics"),
 		CrashReporter("crashreporter", "CrashReporter"),
 		Rating("rating", "Rating"),
-		Push("push", "Push");
+		Push("push", "Push"),
+		Billing("billing", "Billing");
 		//...
 
 
@@ -43,11 +46,11 @@ public class PointA {
 
 		private final String mPackage;
 		private final String mClass;
-	
+
 		public String getPackageName() {
 			return mPackage;
 		}
-		
+
 		public String getClassName() {
 			return mClass;
 		}
@@ -62,7 +65,7 @@ public class PointA {
 	private static CrashReporterAdapter mCrashReporterProvider;
 	private static RatingAdapter mRatingProvider;
 	private static PushAdapter mPushProvider;
-
+	private static BillingAdapter mBillingAdapter;
 
 	// ===========================================================
 	// Constructors
@@ -80,7 +83,7 @@ public class PointA {
 		ConfigManager lConfigManager = new ConfigManager();
 
 		// Read config file
-		lConfigManager.parse(pApp);
+		//lConfigManager.parse(pApp);
 
 		// Create factory
 		PointAServiceFactory lFactory = new PointAServiceFactory(pApp);
@@ -90,41 +93,53 @@ public class PointA {
 		mAnalyticsProvider = (AnalyticsAdapter) lFactory.buildProvider(ServiceType.Analytics, lConfigManager);
 		mCrashReporterProvider = (CrashReporterAdapter) lFactory.buildProvider(ServiceType.CrashReporter, lConfigManager);
 		mRatingProvider = (RatingAdapter) lFactory.buildProvider(ServiceType.Rating, lConfigManager);
-		mPushProvider = (PushAdapter) lFactory.buildProvider(ServiceType.Push, lConfigManager);
+		//mPushProvider = (PushAdapter) lFactory.buildProvider(ServiceType.Push, lConfigManager);
 	}
 
 	public static AdsAdapter ads(){
 		if(mAdProvider == null)
 			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
-		
+
 		return mAdProvider;
 	}
 
 	public static AnalyticsAdapter analytics(){
 		if(mAdProvider == null)
 			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
-		
+
 		return mAnalyticsProvider;
 	}
 
 	public static CrashReporterAdapter crashReporter(){
 		if(mAdProvider == null)
 			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
-		
+
 		return mCrashReporterProvider;
 	}
 
 	public static RatingAdapter rating(){
 		if(mAdProvider == null)
 			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
-		
+
 		return mRatingProvider;
 	}
 
 	public static PushAdapter push(){
 		if(mAdProvider == null)
 			Log.e(LOG_TAG, "You must call PointA.init() before accessing any services!");
-		
+
 		return mPushProvider;
+	}
+
+	// ===========================================================
+	// Life cycle Methods
+	// ===========================================================
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+		mBillingAdapter.pointActivityResult(requestCode, resultCode, data);
+	}
+
+	public void onDestroy() {
+		mBillingAdapter.onDestroy();
 	}
 }
