@@ -1,13 +1,16 @@
 package com.pointa.service.billing;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.pointa.service.PointAServiceFactory;
+import com.pointa.service.billing.utils.IabException;
 import com.pointa.service.billing.utils.IabHelper;
 import com.pointa.service.billing.utils.IabResult;
 import com.pointa.service.billing.utils.Inventory;
@@ -19,10 +22,14 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 	static final String LOG_TAG = PointAServiceFactory.class.getSimpleName();
 
 
-	//Array of 3 of hashmaps
-
 	//List of consumable
 	//HashMap<SKU, int quantity>
+
+
+	HashMap<String, Integer> mConsumable;
+	HashMap<String, Boolean> mNonConsumable;
+	HashMap<String, Boolean> mSubscription;
+
 
 	//List of non-consumable
 	//HashMap<SKU, bool owned>
@@ -51,7 +58,15 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 	public void init(Map<String, String> pParams, Application pApp)
 			throws Exception {
 
+		//HashMap<SKU, int quantity>
+		mConsumable = new HashMap<String, Integer>();
+		mNonConsumable = new HashMap<String, Boolean>();
+		mSubscription = new HashMap<String, Boolean>();
+
+
+
 		mPackageName = pApp.getPackageName();
+
 		/* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
 		 * (that you got from the Google Play developer console). This is not your
 		 * developer public key, it's the *app-specific* public key.
@@ -65,14 +80,6 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 		 */
 		String base64EncodedPublicKey = "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
 
-		// Some sanity checks to see if the developer (that's you!) really followed the
-		// instructions to run this sample (don't put these checks on your app!)
-		if (base64EncodedPublicKey.contains("CONSTRUCT_YOUR")) {
-			throw new RuntimeException("Please put your app's public key in MainActivity.java. See README.");
-		}
-		if (pApp.getPackageName().startsWith("com.example")) {
-			throw new RuntimeException("Please change the sample's package name! See README.");
-		}
 
 		// Create the helper, passing it our context and the public key to verify signatures with
 		Log.d(LOG_TAG, "Creating IAB helper.");
@@ -98,7 +105,7 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 				if (mHelper == null) return;
 
 				// IAB is fully set up. Now, let's get an inventory of stuff we own.
-				Log.d(LOG_TAG, "Setup successful. Querying inventory.");
+				Log.d(LOG_TAG, "Setup successful.");
 
 			}
 		});
@@ -122,38 +129,42 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 
 			Log.d(LOG_TAG, "Query inventory was successful.");
 
-			/*
-			 * Check for items we own. Notice that for each purchase, we check
-			 * the developer payload to see if it's correct! See
-			 * verifyDeveloperPayload().
-			 */
+			// How to do quantity!?
 
-			/*
-            // Do we have the premium upgrade?
-            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
-            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
-            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+			for (Map.Entry<String, Integer> entry : mConsumable.entrySet()) {
+				String key = entry.getKey();
 
-            // Do we have the infinite gas plan?
-            Purchase infiniteGasPurchase = inventory.getPurchase(SKU_INFINITE_GAS);
-            mSubscribedToInfiniteGas = (infiniteGasPurchase != null &&
-                    verifyDeveloperPayload(infiniteGasPurchase));
-            Log.d(TAG, "User " + (mSubscribedToInfiniteGas ? "HAS" : "DOES NOT HAVE")
-                        + " infinite gas subscription.");
-            if (mSubscribedToInfiniteGas) mTank = TANK_MAX;
+				Purchase premiumPurchase = inventory.getPurchase(key);
+				Boolean mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
 
-            // Check for gas delivery -- if we own gas, we should fill up the tank immediately
-            Purchase gasPurchase = inventory.getPurchase(SKU_GAS);
-            if (gasPurchase != null && verifyDeveloperPayload(gasPurchase)) {
-                Log.d(TAG, "We have gas. Consuming it.");
-                mHelper.consumeAsync(inventory.getPurchase(SKU_GAS), mConsumeFinishedListener);
-                return;
-            }
+				mConsumable.put(key, mIsPremium? 1 : 0);
 
-            updateUi();
-            setWaitScreen(false);
-            Log.d(TAG, "Initial inventory query finished; enabling main UI.");
-			 */
+				Log.d(LOG_TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+			}
+
+			for (Map.Entry<String, Boolean> entry : mNonConsumable.entrySet()) {
+				String key = entry.getKey();
+
+				Purchase premiumPurchase = inventory.getPurchase(key);
+				Boolean mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+
+				mNonConsumable.put(key, mIsPremium);
+
+				Log.d(LOG_TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+			}
+
+			for (Map.Entry<String, Boolean> entry : mSubscription.entrySet()) {
+				String key = entry.getKey();
+
+				Purchase premiumPurchase = inventory.getPurchase(key);
+				Boolean mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+
+				mSubscription.put(key, mIsPremium);
+
+				Log.d(LOG_TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+			}
+
+
 		}
 	};
 
@@ -212,31 +223,35 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 			}
 
 			Log.d(LOG_TAG, "Purchase successful.");
-			/*
-            if (purchase.getSku().equals(SKU_GAS)) {
-                // bought 1/4 tank of gas. So consume it.
-                Log.d(TAG, "Purchase is gas. Starting gas consumption.");
-                mHelper.consumeAsync(purchase, mConsumeFinishedListener);
-            }
-            else if (purchase.getSku().equals(SKU_PREMIUM)) {
-                // bought the premium upgrade!
-                Log.d(TAG, "Purchase is premium upgrade. Congratulating user.");
-                alert("Thank you for upgrading to premium!");
-                mIsPremium = true;
-                updateUi();
-                setWaitScreen(false);
-            }
-            else if (purchase.getSku().equals(SKU_INFINITE_GAS)) {
-                // bought the infinite gas subscription
-                Log.d(TAG, "Infinite gas subscription purchased.");
-                alert("Thank you for subscribing to infinite gas!");
-                mSubscribedToInfiniteGas = true;
-                mTank = TANK_MAX;
-                updateUi();
-                setWaitScreen(false);
-            }
-        }
-			 */
+
+
+			for (Map.Entry<String, Integer> entry : mConsumable.entrySet()) {
+				String key = entry.getKey();
+				if (purchase.getSku().equals(key)) {
+					// purchase.
+					// handle
+					mConsumable.put(key, entry.getValue() + 1);
+					return;
+				}
+			}
+
+			for (Map.Entry<String, Boolean> entry : mNonConsumable.entrySet()) {
+				String key = entry.getKey();
+
+				if (purchase.getSku().equals(key)) {
+					mNonConsumable.put(key, true);
+					return;
+				}
+			}
+
+			for (Map.Entry<String, Boolean> entry : mSubscription.entrySet()) {
+				String key = entry.getKey();
+
+				if (purchase.getSku().equals(key)) {
+					mSubscription.put(key, true);
+					return;
+				}
+			}
 		}};
 
 		// Called when consumption is complete
@@ -254,9 +269,17 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 					// successfully consumed, so we apply the effects of the item in our
 					// game world's logic, which in our case means filling the gas tank a bit
 					Log.d(LOG_TAG, "Consumption successful. Provisioning.");
-					//mTank = mTank == TANK_MAX ? TANK_MAX : mTank + 1;
-					//saveData();
-					//alert("You filled 1/4 tank. Your tank is now " + String.valueOf(mTank) + "/4 full!");
+
+					for (Map.Entry<String, Integer> entry : mConsumable.entrySet()) {
+						String key = entry.getKey();
+						if (purchase.getSku().equals(key)) {
+							// purchase.
+							// handle
+							mConsumable.put(key, entry.getValue() - 1);
+							return;
+						}
+					}
+
 				}
 				else {
 					Log.e(LOG_TAG, "Error while consuming: " + result);
@@ -267,19 +290,41 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 		};
 
 
+		IabHelper.QueryInventoryFinishedListener mReceivedInventoryListener 
+		= new IabHelper.QueryInventoryFinishedListener() {
+			public void onQueryInventoryFinished(IabResult result,
+					Inventory inventory) {
+
+				if (result.isFailure()) {
+					// Handle failure
+				} else {
+					mHelper.consumeAsync(inventory.getPurchase(itemToConsume), 
+							mConsumeFinishedListener);
+				}
+			}
+		};
+
+		public String itemToConsume;
+
 		@Override
 		public void consumeItem(String pSku) {
-			// TODO Auto-generated method stub
+			itemToConsume = pSku;
 
+			mHelper.queryInventoryAsync(mReceivedInventoryListener);
 		}
 		@Override
-		public void purchaseItem(String pSku) {
-			// TODO Auto-generated method stub
-
+		public void purchaseItem(Activity pActivity, String pSku) {
+			mHelper.launchPurchaseFlow(pActivity, pSku, 10001,   
+					mPurchaseFinishedListener, "mypurchasetoken");
 		}
 		@Override
 		public Bundle getItemDetails(String pSku) {
-			// TODO Auto-generated method stub
+			try {
+				mHelper.queryInventory(true, null, null).getSkuDetails(pSku);
+			} catch (IabException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		}
 
