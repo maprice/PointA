@@ -15,6 +15,11 @@
 
 package com.pointa.service.billing.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -28,13 +33,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.android.vending.billing.IInAppBillingService;
-
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

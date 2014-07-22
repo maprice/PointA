@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.vending.billing;
+package com.pointa.service.billing.utils;
 
 import android.os.Bundle;
 

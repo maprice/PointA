@@ -14,7 +14,7 @@ public interface BillingAdapter extends PointAService{
 	public void purchaseItem(Activity pActivity, String pSku);
 	public Bundle getItemDetails(String pSku);
 
-	public void pointActivityResult(int requestCode, int resultCode, Intent data);
+	public boolean onActivityResult(int requestCode, int resultCode, Intent data);
 
 	public void onDestroy();
 }

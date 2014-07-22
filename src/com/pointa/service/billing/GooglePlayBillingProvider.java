@@ -18,99 +18,17 @@ import com.pointa.service.billing.utils.Purchase;
 
 public class GooglePlayBillingProvider implements BillingAdapter{
 
+	// ===========================================================
+	// Constants
+	// ===========================================================
 
 	static final String LOG_TAG = PointAServiceFactory.class.getSimpleName();
 
-
-	//List of consumable
-	//HashMap<SKU, int quantity>
-
-
-	HashMap<String, Integer> mConsumable;
-	HashMap<String, Boolean> mNonConsumable;
-	HashMap<String, Boolean> mSubscription;
-
-
-	//List of non-consumable
-	//HashMap<SKU, bool owned>
-
-	//List of subscriptions
-
-	// SKUs for our products: the premium upgrade (non-consumable) and gas (consumable)
-	static final String SKU_PREMIUM = "premium";
-
-	// Consumable
-	static final String SKU_GAS = "gas";
-
-	// SKU for our subscription
-	static final String SKU_INFINITE_GAS = "infinite_gas";
-
-	// (arbitrary) request code for the purchase flow
-	static final int RC_REQUEST = 10001;
-
-
-	// The helper object
-	IabHelper mHelper;
-
-	String mPackageName;
-
-	@Override
-	public void init(Map<String, String> pParams, Application pApp)
-			throws Exception {
-
-		//HashMap<SKU, int quantity>
-		mConsumable = new HashMap<String, Integer>();
-		mNonConsumable = new HashMap<String, Boolean>();
-		mSubscription = new HashMap<String, Boolean>();
-
-
-
-		mPackageName = pApp.getPackageName();
-
-		/* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
-		 * (that you got from the Google Play developer console). This is not your
-		 * developer public key, it's the *app-specific* public key.
-		 *
-		 * Instead of just storing the entire literal string here embedded in the
-		 * program,  construct the key at runtime from pieces or
-		 * use bit manipulation (for example, XOR with some other string) to hide
-		 * the actual key.  The key itself is not secret information, but we don't
-		 * want to make it easy for an attacker to replace the public key with one
-		 * of their own and then fake messages from the server.
-		 */
-		String base64EncodedPublicKey = "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
-
-
-		// Create the helper, passing it our context and the public key to verify signatures with
-		Log.d(LOG_TAG, "Creating IAB helper.");
-		mHelper = new IabHelper(pApp, base64EncodedPublicKey);
-
-		// enable debug logging (for a production application, you should set this to false).
-		mHelper.enableDebugLogging(true);
-
-		// Start setup. This is asynchronous and the specified listener
-		// will be called once setup completes.
-		Log.d(LOG_TAG, "Starting setup.");
-		mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			public void onIabSetupFinished(IabResult result) {
-				Log.d(LOG_TAG, "Setup finished.");
-
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					Log.e(LOG_TAG, "Problem setting up in-app billing: " + result);
-					return;
-				}
-
-				// Have we been disposed of in the meantime? If so, quit.
-				if (mHelper == null) return;
-
-				// IAB is fully set up. Now, let's get an inventory of stuff we own.
-				Log.d(LOG_TAG, "Setup successful.");
-
-			}
-		});
+	public enum ItemType{
+		CONSUMEABLE,
+		NONCONSUMABLE,
+		SUBSCRIPTION
 	}
-
 
 
 	// Listener that's called when we finish querying the items and subscriptions we own
@@ -168,42 +86,6 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 		}
 	};
 
-
-
-	@Override
-	public String[] queryInventory() {
-		mHelper.queryInventoryAsync(mGotInventoryListener);
-		return null;
-	}
-	/** Verifies the developer payload of a purchase. */
-	boolean verifyDeveloperPayload(Purchase p) {
-		String payload = p.getDeveloperPayload();
-
-		/*
-		 * TODO: verify that the developer payload of the purchase is correct. It will be
-		 * the same one that you sent when initiating the purchase.
-		 *
-		 * WARNING: Locally generating a random string when starting a purchase and
-		 * verifying it here might seem like a good approach, but this will fail in the
-		 * case where the user purchases an item on one device and then uses your app on
-		 * a different device, because on the other device you will not have access to the
-		 * random string you originally generated.
-		 *
-		 * So a good developer payload has these characteristics:
-		 *
-		 * 1. If two different users purchase an item, the payload is different between them,
-		 *    so that one user's purchase can't be replayed to another user.
-		 *
-		 * 2. The payload must be such that you can verify it even when the app wasn't the
-		 *    one who initiated the purchase flow (so that items purchased by the user on
-		 *    one device work on other devices owned by the user).
-		 *
-		 * Using your own server to store and verify developer payloads across app
-		 * installations is recommended.
-		 */
-
-		return true;
-	}
 
 	// Callback for when a purchase is finished
 	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
@@ -290,28 +172,143 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 		};
 
 
-		IabHelper.QueryInventoryFinishedListener mReceivedInventoryListener 
-		= new IabHelper.QueryInventoryFinishedListener() {
-			public void onQueryInventoryFinished(IabResult result,
-					Inventory inventory) {
 
-				if (result.isFailure()) {
-					// Handle failure
-				} else {
-					mHelper.consumeAsync(inventory.getPurchase(itemToConsume), 
-							mConsumeFinishedListener);
+
+
+
+		// ===========================================================
+		// Fields
+		// ===========================================================
+
+		private HashMap<String, Integer> mConsumable;
+		private HashMap<String, Boolean> mNonConsumable;
+		private HashMap<String, Boolean> mSubscription;
+
+		// (arbitrary) request code for the purchase flow
+		static final int RC_REQUEST = 10001;
+
+		// The helper object
+		private IabHelper mHelper;
+
+		private String itemToConsume;
+
+
+		// ===========================================================
+		// Methods
+		// ===========================================================
+
+		@Override
+		public void init(Map<String, String> pParams, Application pApp)
+				throws Exception {
+
+			//HashMap<SKU, int quantity>
+			mConsumable = new HashMap<String, Integer>();
+			mNonConsumable = new HashMap<String, Boolean>();
+			mSubscription = new HashMap<String, Boolean>();
+
+			/* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
+			 * (that you got from the Google Play developer console). This is not your
+			 * developer public key, it's the *app-specific* public key.
+			 *
+			 * Instead of just storing the entire literal string here embedded in the
+			 * program,  construct the key at runtime from pieces or
+			 * use bit manipulation (for example, XOR with some other string) to hide
+			 * the actual key.  The key itself is not secret information, but we don't
+			 * want to make it easy for an attacker to replace the public key with one
+			 * of their own and then fake messages from the server.
+			 */
+			String base64EncodedPublicKey = "CONSTRUCT_YOUR_KEY_AND_PLACE_IT_HERE";
+
+
+			// Create the helper, passing it our context and the public key to verify signatures with
+			Log.d(LOG_TAG, "Creating IAB helper.");
+			mHelper = new IabHelper(pApp, base64EncodedPublicKey);
+
+			// enable debug logging (for a production application, you should set this to false).
+			mHelper.enableDebugLogging(true);
+
+			// Start setup. This is asynchronous and the specified listener
+			// will be called once setup completes.
+			Log.d(LOG_TAG, "Starting setup.");
+			mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+				public void onIabSetupFinished(IabResult result) {
+					Log.d(LOG_TAG, "Setup finished.");
+
+					if (!result.isSuccess()) {
+						// Oh noes, there was a problem.
+						Log.e(LOG_TAG, "Problem setting up in-app billing: " + result);
+						return;
+					}
+
+					// Have we been disposed of in the meantime? If so, quit.
+					if (mHelper == null) return;
+
+					// IAB is fully set up. Now, let's get an inventory of stuff we own.
+					Log.d(LOG_TAG, "Setup successful.");
+
 				}
-			}
-		};
+			});
+		}
 
-		public String itemToConsume;
+
+
+		@Override
+		public String[] queryInventory() {
+			mHelper.queryInventoryAsync(mGotInventoryListener);
+			
+			//switch(ItemType)
+			return null;
+		}
+		/** Verifies the developer payload of a purchase. */
+		boolean verifyDeveloperPayload(Purchase p) {
+			String payload = p.getDeveloperPayload();
+
+			/*
+			 * TODO: verify that the developer payload of the purchase is correct. It will be
+			 * the same one that you sent when initiating the purchase.
+			 *
+			 * WARNING: Locally generating a random string when starting a purchase and
+			 * verifying it here might seem like a good approach, but this will fail in the
+			 * case where the user purchases an item on one device and then uses your app on
+			 * a different device, because on the other device you will not have access to the
+			 * random string you originally generated.
+			 *
+			 * So a good developer payload has these characteristics:
+			 *
+			 * 1. If two different users purchase an item, the payload is different between them,
+			 *    so that one user's purchase can't be replayed to another user.
+			 *
+			 * 2. The payload must be such that you can verify it even when the app wasn't the
+			 *    one who initiated the purchase flow (so that items purchased by the user on
+			 *    one device work on other devices owned by the user).
+			 *
+			 * Using your own server to store and verify developer payloads across app
+			 * installations is recommended.
+			 */
+
+			return true;
+		}
 
 		@Override
 		public void consumeItem(String pSku) {
 			itemToConsume = pSku;
 
-			mHelper.queryInventoryAsync(mReceivedInventoryListener);
+			mHelper.queryInventoryAsync(new IabHelper.QueryInventoryFinishedListener() {
+				public void onQueryInventoryFinished(IabResult result,
+						Inventory inventory) {
+
+					if (result.isFailure()) {
+						// Handle failure
+					} else {
+						mHelper.consumeAsync(inventory.getPurchase(itemToConsume), 
+								mConsumeFinishedListener);
+					}
+				}
+			}
+
+					);
 		}
+
 		@Override
 		public void purchaseItem(Activity pActivity, String pSku) {
 			mHelper.launchPurchaseFlow(pActivity, pSku, 10001,   
@@ -329,19 +326,22 @@ public class GooglePlayBillingProvider implements BillingAdapter{
 		}
 
 		@Override
-		public void pointActivityResult(int requestCode, int resultCode, Intent data) {
+		public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
 			Log.d(LOG_TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
-			if (mHelper == null) return;
+			if (mHelper == null) return false;
 
 			// Pass on the activity result to the helper for handling
 			if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
 				// not handled, so handle it ourselves (here's where you'd
 				// perform any handling of activity results not related to in-app
 				// billing...
+				return false;
 				//super.onActivityResult(requestCode, resultCode, data);
 			}
 			else {
+
 				Log.d(LOG_TAG, "onActivityResult handled by IABUtil.");
+				return true;
 			}
 		}
 
