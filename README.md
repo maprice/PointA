@@ -70,8 +70,9 @@ The Eclipse plugin is a simple GUI application that allows the user to specify t
 **Figure2: Physical Architecture of PointA Project**
 
 
+From the physical perspective, all of the PointA project code will be open sourced and stored in Github repositories. As shown on the physical diagram, in order for a developer to deploy an app using our PointA Library, he/she will pull the Eclipse Plugin code and the PointA Library code from the repository, the user will then link PointA as a library to their application and as well installing the Eclipse Plugin.  
 
-
+The user then can enter all the configuration data through the provided GUI. Upon clicking “submit” button on GUI, the plugin will automatically download all the jar files, which are 3rd party libraries stored on the service providers’ servers. The plugin will then put the jar files into the appropriate folders and set up any other dependencies PointA Library needs to use these services. The app developer can then access all those services through the PointA library and once the app is deployed on the mobile phone, it will access the 3rd party services stored on these service provider’s servers though the network. 
 
 
 
