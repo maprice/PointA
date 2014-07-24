@@ -4,7 +4,7 @@
 
 ##Overview
 
-PointA is a open-source Android library that consolidates most of the common services that a typical Android application needs and provides a simple, user-friendly and safe interface for application to interact with these services. This includes services like Ads, Analytics, Push Notifications, Facebook/Twitter. The goal is to minimize the amount of redundant work and code duplication in implementing these services, provide a safe interface for application to interact with the services, and provide redundancy of services in case one of the serice provider fails.
+PointA is a open-source Android library that consolidates most of the common services that a typical Android application needs and provides a simple, user-friendly and safe interface for applications to interact with these services. This includes services like Ads, Analytics, and Push Notifications. The goal is to minimize the amount of redundant work and code duplication in implementing these services, provide a safe interface for application to interact with the services, and provide redundancy of services in case one of the serice provider fails.
 
 
 ##Supported Services and Service Providers
@@ -13,8 +13,8 @@ The following are the services and service providers that the PointA Library Sup
 
 * Ads
   - Admob
-  - AdSense
-  - Burstly
+  - AdSense (in progress)
+  - Burstly (in progress)
 
 * Analytics
   - Google Analytics
@@ -31,16 +31,20 @@ The following are the services and service providers that the PointA Library Sup
   - BugSense
   - BugSnag
   - Crittercism
+
+* Billing
+  - Google Play
+  - Amazon Market
   
 
-##Instructions on Setting up PointA Library
+##Instructions: Setting up the PointA Library
 
-1. Clone the PointA Library to the local machine and add PointA as a submodule to their main project
-2. Link PointA as a library to their application on Android
-3. Download and install the eclipse plugin
-4. Run the plugin, which will bring up a GUI and configure the services(e.g. service providers and priorities)
-5. Click save, the plugin will automatically download the necessarily files and take care all dependencies for the services
-6. The service function calls are now available to the users through the PointA Library
+1. Clone the PointA Library from our GitHub to your local machine and add PointA as a submodule to your main project
+2. Link PointA as a library to your application in your IDE
+3. Download and install the Cclipse plugin
+4. Run the plugin, which will allow you to configure your chosen services and providers
+5. Click save - the plugin will automatically update the classpath and AndroidManifest as well as download jar files
+6. The service function calls are now available through the PointA library
 
 
 ##Architecture of the PointA Project 
@@ -51,25 +55,19 @@ The following are the services and service providers that the PointA Library Sup
 **Figure1: Architecture of PointA Project**
 
 
-From a high level perspective, the PointA project consists of three main components: the PointA library, the PointA Eclipse Plugin and the PointA Android App. As shown in the component diagram, the most crucial component of the  project is the PointA library, and its main purpose is to abstract away all the details of these service providers and provide one simple and user-friendly interface for users use these service providers.  
+PointA consists of three main components: the library, the Eclipse plugin, and the demo app. 
 
-The PointA Android app is a simple android application that utilizes the services that the PointA library provides (e.g. ads, crash reporting, analytics, etc.). It consists of a listview of all the services and the basic functionalities of each service such as “showAd” for ads or logEvent for analytics. In order for our PointA library to know what services need to be supported and what providers are needed. We need a way for the users to inform the PointA library of the data specific to each application’s configuration. We accomplish this through the Eclipse plugin and a config.xml file, which minimizes the dependencies between the PointA Library and the Eclipse Plugin. 
+The library is the central component that contains all the code that adapts pointA function calls to provider-specific function calls, gracefully handles exceptions and invokes the user's specified backups when the original services are not functional.
 
-The Eclipse plugin is an Eclipse extensible application that allows users to input configuration data through a GUI, which the plugin will then write it to an xml file. It also takes care of other dependencies such as downloading jars, setting up build path and modify/generate the appropriate xml files. Therefore the plugin updates the PointA library as shown in the component diagram through user inputs.
+The demo app is designed to test the user's chosen providers and services. It consists of a listview of all the services and the basic functionalities of each service such as “showAd” for ads or "logEvent" for analytics. The demo app tests the user's chosen services before the user integrates these function calls into their own app.
+
+The Eclipse plugin is a simple GUI application that allows the user to specify their chosen proviers and services, automatically downloading jars and updating the classpath and Android manifest to acommodate these servies.
 
 
 <a href="http://maprice.github.io/PointA/">
 ![logo](https://raw.github.com/maprice/PointA/gh-pages/images/pointA_Physical_Arch.png)
 </a>
 **Figure2: Physical Architecture of PointA Project**
-
-
-From the physical perspective, all of the PointA project code will be open sourced and stored in Github repositories. As shown on the physical diagram, in order for a developer to deploy an app using our PointA Library, he/she will pull the Eclipse Plugin code and the PointA Library code from the repository, the user will then link PointA as a library to their application and as well installing the Eclipse Plugin.  
-
-The user then can enter all the configuration data through the provided GUI. Upon clicking “submit” button on GUI, the plugin will automatically download all the jar files, which are 3rd party libraries stored on the service providers’ servers. The plugin will then put the jar files into the appropriate folders and set up any other dependencies PointA Library needs to use these services. The app developer can then access all those services through the PointA library and once the app is deployed on the mobile phone, it will access the 3rd party services stored on these service provider’s servers though the network. 
-
-
-
 
 
 
