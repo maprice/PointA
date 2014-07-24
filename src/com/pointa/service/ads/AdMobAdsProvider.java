@@ -53,8 +53,9 @@ public class AdMobAdsProvider implements AdsAdapter, AdListener{
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
 		// To be read via config
-		INTERSTITIAL_UNIT_ID = "ca-app-pub-3187351542402368/9192434536";
-		BANNER_UNIT_ID = "ca-app-pub-3187351542402368/7715701332";
+		
+		INTERSTITIAL_UNIT_ID = mParams.get("interstitialUnitID");
+		BANNER_UNIT_ID = mParams.get("bannerUnitID");
 
 		showInterstitialImmediate = false;
 	}

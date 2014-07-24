@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pointAconfig>
    <service>
+      <type>ads</type>
+      <provider>AdMob</provider>
+      <priority>1</priority>
+      <interstitialUnitID>ca-app-pub-3187351542402368/9192434536</interstitialUnitID>
+      <bannerUnitID>ca-app-pub-3187351542402368/7715701332</bannerUnitID>
+   </service>
+    <service>
+      <type>analytics</type>
+      <provider>Parse</provider>
+      <priority>1</priority>
+      <appId>xuHDYHfrF0dU5bcjZQv9CdzgdBAMKlHKQnag2Jqr</appId>
+      <clientId>zLSAdgHMkXy41SeOpOfLsvrjQxB35fgXKqfkFuiA</clientId>
+   </service>
+   <service>
       <type>crashreporter</type>
       <provider>BugSense</provider>
       <priority>1</priority>
-      <destinationtype>email</destinationtype>
-      <concretedestination>newdev@gmail.com</concretedestination>
+      <appId>e84e0e8c</appId>
    </service>
    <service>
       <type>crashreporter</type>
       <provider>BugSnag</provider>
       <priority>2</priority>
-      <destinationtype>email</destinationtype>
-      <concretedestination>newdev@gmail.com</concretedestination>
+      <appId>d2388a0a62224bed5226060dc7b8b055</appId>
    </service>
 </pointAconfig>

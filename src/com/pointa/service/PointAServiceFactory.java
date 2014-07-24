@@ -91,7 +91,7 @@ public class PointAServiceFactory{
 
 			// Try to initilaze provider
 			try {
-				lNewService.init(null, mApp);
+				lNewService.init(lMetaData.getParams(), mApp);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Log.e(LOG_TAG, "Failed to initialize " + lMetaData.getName() + " falling to priority" + priority + 1);

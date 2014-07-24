@@ -42,9 +42,8 @@ public class ParseAnalyticsProvider implements AnalyticsAdapter{
 	// ===========================================================
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
-
-		String appId = "xuHDYHfrF0dU5bcjZQv9CdzgdBAMKlHKQnag2Jqr";
-		String clientKey = "zLSAdgHMkXy41SeOpOfLsvrjQxB35fgXKqfkFuiA";
+		String appId = mParams.get("appId");
+		String clientKey = mParams.get("clientKey");
 
 		Parse.initialize(pApp, appId, clientKey);
 	}

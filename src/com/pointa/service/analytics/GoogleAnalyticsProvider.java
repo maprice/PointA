@@ -40,6 +40,8 @@ public class GoogleAnalyticsProvider implements AnalyticsAdapter{
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
 
+		
+		
 	}
 	
 	@Override

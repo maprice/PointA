@@ -345,7 +345,7 @@ public class ConfigManager{
 		}
 
 
-		return lServiceProvider.get(pPriority);
+		return lServiceProvider.get(pPriority-1);
 	}
 
 

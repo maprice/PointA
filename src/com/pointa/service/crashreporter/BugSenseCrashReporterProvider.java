@@ -42,7 +42,7 @@ public class BugSenseCrashReporterProvider implements CrashReporterAdapter{
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
 		mContext = pApp.getApplicationContext();
-		mAppId = "e84e0e8c";
+		mAppId = mParams.get("appId");
 
 
 		BugSenseHandler.initAndStartSession(mContext, mAppId);

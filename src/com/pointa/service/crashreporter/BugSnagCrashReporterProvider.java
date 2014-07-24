@@ -41,7 +41,7 @@ public class BugSnagCrashReporterProvider implements CrashReporterAdapter{
 
 	@Override
 	public void init(Map<String, String> mParams, Application pApp) {
-		mAppId = "d2388a0a62224bed5226060dc7b8b055";
+		mAppId = mParams.get("appId");
 
 		Bugsnag.register(pApp.getApplicationContext(), mAppId);
 		
