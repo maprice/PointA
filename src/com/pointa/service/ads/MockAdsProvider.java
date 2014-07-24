@@ -14,13 +14,13 @@ import android.view.ViewGroup;
  *
  */
 
-public class MockAdProvider implements AdsAdapter{
+public class MockAdsProvider implements AdsAdapter{
 
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = MockAdProvider.class.getSimpleName();
+	static final String LOG_TAG = MockAdsProvider.class.getSimpleName();
 
 
 	// ===========================================================

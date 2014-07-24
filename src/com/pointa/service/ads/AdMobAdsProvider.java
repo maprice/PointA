@@ -20,13 +20,13 @@ import com.google.ads.InterstitialAd;
  *
  */
 
-public class AdMobAdProvider implements AdsAdapter, AdListener{
+public class AdMobAdsProvider implements AdsAdapter, AdListener{
 
 	// ===========================================================
 	// Constants
 	// ===========================================================
 
-	static final String LOG_TAG = AdMobAdProvider.class.getSimpleName();
+	static final String LOG_TAG = AdMobAdsProvider.class.getSimpleName();
 
 
 	// ===========================================================
@@ -44,7 +44,7 @@ public class AdMobAdProvider implements AdsAdapter, AdListener{
 	// ===========================================================
 
 	//To be read from config file
-	public AdMobAdProvider(){}
+	public AdMobAdsProvider(){}
 
 	// ===========================================================
 	// Methods

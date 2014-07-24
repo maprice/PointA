@@ -83,7 +83,7 @@ public class PointA {
 		ConfigManager lConfigManager = new ConfigManager();
 
 		// Read config file
-		//lConfigManager.parse(pApp);
+		lConfigManager.parse(pApp);
 
 		// Create factory
 		PointAServiceFactory lFactory = new PointAServiceFactory(pApp);

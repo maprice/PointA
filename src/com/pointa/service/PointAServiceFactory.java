@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.pointa.PointA.ServiceType;
 import com.pointa.config.ConfigManager;
-import com.pointa.service.ads.MockAdProvider;
+import com.pointa.service.ads.MockAdsProvider;
 import com.pointa.service.analytics.MockAnalyticsProvider;
 import com.pointa.service.crashreporter.MockCrashReporterProvider;
 import com.pointa.service.push.MockPushProvider;
@@ -27,7 +27,7 @@ public class PointAServiceFactory{
 
 	static final String LOG_TAG = PointAServiceFactory.class.getSimpleName();
 
-	final private String fClassPathFormat = "com.pointa.service.%s.%sProvider";
+	final private String fClassPathFormat = "com.pointa.service.%s.%s%sProvider";
 
 	// ===========================================================
 	// Fields
@@ -67,7 +67,7 @@ public class PointAServiceFactory{
 			try {
 				Class<?> lProviderClass;
 
-				String lFullClassName = String.format(fClassPathFormat, pService.getPackageName(), lMetaData.getName());
+				String lFullClassName = String.format(fClassPathFormat, pService.getPackageName(), lMetaData.getName(), pService.getClassName());
 				lProviderClass = Class.forName(lFullClassName);
 				lNewService = (PointAService) lProviderClass.newInstance();
 
@@ -108,7 +108,7 @@ public class PointAServiceFactory{
 		PointAService lNewService = null;
 		switch(pService){
 		case Ads:
-			lNewService = new MockAdProvider();
+			lNewService = new MockAdsProvider();
 			break;
 		case Analytics:
 			lNewService = new MockAnalyticsProvider();

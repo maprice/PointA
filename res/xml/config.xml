@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pointAconfig>
    <service>
-      <type>ads</type>
-      <provider>admob</provider>
-      <priority>1</priority>
-      <format>banner</format>
-      <size>small</size>
-   </service>
-   <service>
-      <type>crashreporting</type>
-      <provider>acra</provider>
+      <type>crashreporter</type>
+      <provider>BugSense</provider>
       <priority>1</priority>
       <destinationtype>email</destinationtype>
       <concretedestination>newdev@gmail.com</concretedestination>
    </service>
    <service>
       <type>crashreporter</type>
-      <provider>crashlytics</provider>
+      <provider>BugSnag</provider>
       <priority>2</priority>
       <destinationtype>email</destinationtype>
       <concretedestination>newdev@gmail.com</concretedestination>

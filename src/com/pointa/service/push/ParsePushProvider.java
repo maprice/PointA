@@ -44,14 +44,14 @@ public class ParsePushProvider implements PushAdapter{
 		String appId = "xuHDYHfrF0dU5bcjZQv9CdzgdBAMKlHKQnag2Jqr";
 		String clientKey = "zLSAdgHMkXy41SeOpOfLsvrjQxB35fgXKqfkFuiA";
 		
-		Parse.initialize(pApp, appId, clientKey);
+	//	Parse.initialize(pApp, appId, clientKey);
 		
 	}
 
 	@Override
 	public void setDefaultPushCallback(Context pContext, Class<? extends Activity> pActivity) {
-		PushService.setDefaultPushCallback(pContext, pActivity);
-		ParseInstallation.getCurrentInstallation().saveInBackground();
+	//	PushService.setDefaultPushCallback(pContext, pActivity);
+	//	ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
 }
