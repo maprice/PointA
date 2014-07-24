@@ -55,13 +55,6 @@ The PointA Android app is a simple android application that utilizes the service
 The Eclipse plugin is an Eclipse extensible application that allows users to input configuration data through a GUI, which the plugin will then write it to an xml file. It also takes care of other dependencies such as downloading jars, setting up build path and modify/generate the appropriate xml files. Therefore the plugin updates the PointA library as shown in the component diagram through user inputs.
 
 
-#Design of the PointA Library
-
-
-===== INSERT POINTA LIB CLASS DIAGRAM HERER ======
-
-
-
 
 
 
