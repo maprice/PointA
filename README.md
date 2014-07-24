@@ -45,8 +45,9 @@ The following are the services and service providers that the PointA Library Sup
 
 ##Architecture of the PointA Project 
 
-====INSERT component architecture image here ======
-
+<a href="http://maprice.github.io/PointA/">
+![logo](https://raw.github.com/maprice/PointA/gh-pages/images/PointA_Arch.png)
+</a>
 
 From a high level perspective, the PointA project consists of three main components: the PointA library, the PointA Eclipse Plugin and the PointA Android App. As shown in the component diagram, the most crucial component of the  project is the PointA library, and its main purpose is to abstract away all the details of these service providers and provide one simple and user-friendly interface for users use these service providers.  
 
