@@ -7,6 +7,7 @@ import android.app.Application;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 /**
  * Mock ad interface used to simulate an ad provider
  * @version 1.0

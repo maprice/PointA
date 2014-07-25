@@ -4,7 +4,10 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 
 import com.google.ads.Ad;
 import com.google.ads.AdListener;
@@ -57,6 +60,8 @@ public class AdMobAdsProvider implements AdsAdapter, AdListener{
 		INTERSTITIAL_UNIT_ID = mParams.get("interstitialUnitID");
 		BANNER_UNIT_ID = mParams.get("bannerUnitID");
 
+		Log.e(LOG_TAG, "Banner ID: " + BANNER_UNIT_ID);
+		
 		showInterstitialImmediate = false;
 	}
 
@@ -69,13 +74,12 @@ public class AdMobAdsProvider implements AdsAdapter, AdListener{
 		}
 
 		if(mBanner.getParent() == null)
-			pContainer.addView(mBanner);
+			pContainer.addView(mBanner, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
 		if(!mBanner.isReady()){
 			AdRequest adRequest = new AdRequest();
 			mBanner.loadAd(adRequest);
 		}
-
 	}
 
 

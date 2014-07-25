@@ -74,7 +74,7 @@ public class PointAServiceFactory{
 			} catch (ClassNotFoundException e) {
 				Log.e(LOG_TAG, 
 						"Could not find class " + 
-								String.format(fClassPathFormat, pService.toString(), lMetaData.getName()) + 
+								//String.format(fClassPathFormat, pService.toString(), lMetaData.getName()) + 
 								"\n Are you sure " +  
 								lMetaData.getName() + 
 								" is correctly written in the config.xml?"
