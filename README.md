@@ -41,7 +41,7 @@ The following are the services and service providers that the PointA Library Sup
 
 1. Clone the PointA Library from our GitHub to your local machine and add PointA as a submodule to your main project
 2. Link PointA as a library to your application in your IDE
-3. Download and install the Cclipse plugin
+3. Download and install the Eclipse plugin
 4. Run the plugin, which will allow you to configure your chosen services and providers
 5. Click save - the plugin will automatically update the classpath and AndroidManifest as well as download jar files
 6. The service function calls are now available through the PointA library
